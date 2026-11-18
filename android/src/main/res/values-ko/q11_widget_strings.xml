@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="q11_widget_label">오늘 할 일</string>
+    <string name="q11_widget_desc">오늘 할 일을 홈 화면에서 봐요</string>
+    <string name="q11_widget_empty">위젯 시험 중 · 누르면 11Q가 열려요</string>
+</resources>

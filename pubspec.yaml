@@ -1,0 +1,19 @@
+name: oneone_q_widget
+description: 11Q home screen widget for Android (Galaxy). No secrets in this package.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.3.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: day.q11.widget
+        pluginClass: OneoneQWidgetPlugin

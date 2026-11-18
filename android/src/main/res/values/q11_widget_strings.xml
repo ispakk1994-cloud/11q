@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="q11_widget_title" translatable="false">11Q</string>
+    <string name="q11_widget_label">Today</string>
+    <string name="q11_widget_desc">Today’s tasks on your home screen</string>
+    <string name="q11_widget_empty">Widget test · Tap to open 11Q</string>
+</resources>
