@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="q11_widget_label">오늘 할 일</string>
-    <string name="q11_widget_desc">오늘 할 일을 홈 화면에서 봐요</string>
-    <string name="q11_widget_empty">위젯 시험 중 · 누르면 11Q가 열려요</string>
+    <string name="q11_widget_desc">오늘 할 일을 홈 화면에서 · 체크하면 끝냄</string>
+    <string name="q11_widget_today">오늘</string>
+    <string name="q11_widget_open_app">11Q를 한 번 열면 오늘 할 일이 보여요</string>
+    <string name="q11_widget_add">할 일 적기</string>
+    <string name="q11_widget_check">끝냄</string>
+    <string name="q11_widget_pv_count">4개 남음</string>
+    <string name="q11_widget_pv_now">지금</string>
+    <string name="q11_widget_pv_1">월말 보고서 초안</string>
+    <string name="q11_widget_pv_2">팀 회식 장소 예약</string>
+    <string name="q11_widget_pv_3">회의록 정리</string>
 </resources>

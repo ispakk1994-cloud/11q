@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 체크칸(빈칸) · 선 색은 chkBorderHex를 입힘 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp" android:height="20dp" android:viewportWidth="20" android:viewportHeight="20">
+    <path android:fillColor="#00000000" android:strokeColor="#FFFFFFFF" android:strokeWidth="1.6"
+        android:pathData="M6,0.8L14,0.8A5.2,5.2 0,0 1,19.2 6L19.2,14A5.2,5.2 0,0 1,14 19.2L6,19.2A5.2,5.2 0,0 1,0.8 14L0.8,6A5.2,5.2 0,0 1,6 0.8Z" />
+</vector>

@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 30분 갱신 예약이 재부팅 뒤에도 남게(앱에 이미 있는 권한) -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application>
         <!-- 11Q 홈 화면 위젯 · 오늘 할 일 -->
         <receiver
@@ -12,5 +15,17 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/q11_widget_today_info" />
         </receiver>
+
+        <!-- 위젯 목록 줄 -->
+        <service
+            android:name="day.q11.widget.TodayListService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <!-- 체크 · 30분 갱신을 뒤에서(앱 코드 실행) -->
+        <service
+            android:name="day.q11.widget.WidgetJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 </manifest>
