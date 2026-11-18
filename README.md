@@ -15,8 +15,9 @@ App Settings › Project Dependencies › Custom Pub Dependencies › Add Pub De
 oneone_q_widget:
   git:
     url: https://github.com/ispakk1994-cloud/11q.git
-    ref: v0.1.0
 ```
+
+`ref`를 안 쓰면 늘 main의 마지막 판을 받아요. 특정 판으로 묶으려면 `ref: <커밋 번호>`(예: 0.1.0 = `1bf95df`).
 
 ## Dart
 
