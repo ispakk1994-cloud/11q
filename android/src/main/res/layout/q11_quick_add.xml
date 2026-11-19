@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 위젯 ＋ → 홈 화면 위 작은 창(1.1 시안 WidgetGalaxyA `＋적기` · 0.2.0 · 글자는 시안보다 한두 단계 크게)
+<!-- 위젯 ＋ → 홈 화면 위 작은 창(1.1 시안 WidgetGalaxyA `＋적기` · 0.2.0 · 글자는 시안보다 한두 단계 크게 · 0.3.0 카메라)
      색 · 모서리 · 선 · 그림자는 QuickAddActivity가 테마 토큰으로 칠한다. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/q11_qa_root"
@@ -90,6 +90,16 @@
                 android:padding="14dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/q11_ic_mic" />
+
+            <!-- 적기 전엔 카메라(누르면 11Q 대화 탭 카메라) · 글자를 적으면 넣기로 바뀜 -->
+            <ImageView
+                android:id="@+id/q11_qa_camera"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:padding="13dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/q11_ic_camera" />
 
             <TextView
                 android:id="@+id/q11_qa_send"

@@ -24,12 +24,14 @@ internal class TodayListFactory(
 
     private var rows: List<JSONObject> = emptyList()
     private var theme = WidgetTheme(null)
+    private var level = 1
 
     override fun onCreate() {}
 
     override fun onDataSetChanged() {
         val feed = WidgetStore.feed(context)
         theme = WidgetTheme(feed?.optJSONObject("theme"))
+        level = WidgetStore.sizeLevel(context)
         val all = feed?.optJSONArray("rows")
         val compact = TodayWidgetProvider.isCompact(context, widgetId)
         val out = ArrayList<JSONObject>()
@@ -50,12 +52,12 @@ internal class TodayListFactory(
     override fun getCount(): Int = rows.size
 
     override fun getViewAt(position: Int): RemoteViews {
-        val r = rows.getOrNull(position) ?: return RemoteViews(context.packageName, R.layout.q11_widget_head)
+        val r = rows.getOrNull(position) ?: return RemoteViews(context.packageName, WidgetSize.HEAD[level])
         return if (r.optString("t") == "h") head(r) else row(r)
     }
 
     private fun head(r: JSONObject): RemoteViews {
-        val v = RemoteViews(context.packageName, R.layout.q11_widget_head)
+        val v = RemoteViews(context.packageName, WidgetSize.HEAD[level])
         v.setTextViewText(R.id.q11_head_text, r.optString("text", ""))
         val color = when (r.optString("tone")) {
             "danger" -> theme.danger
@@ -67,7 +69,7 @@ internal class TodayListFactory(
     }
 
     private fun row(r: JSONObject): RemoteViews {
-        val v = RemoteViews(context.packageName, R.layout.q11_widget_row)
+        val v = RemoteViews(context.packageName, WidgetSize.ROW[level])
         val id = r.optString("id", "")
         val done = id.isNotEmpty() && WidgetStore.isPendingDone(context, id)
 
@@ -123,7 +125,8 @@ internal class TodayListFactory(
 
     override fun getLoadingView(): RemoteViews? = null
 
-    override fun getViewTypeCount(): Int = 2
+    /** 묶음 머리 · 줄 × 글자 크기 3단계(크기를 바꾸면 모양이 바뀌므로 넉넉히). */
+    override fun getViewTypeCount(): Int = 6
 
     override fun getItemId(position: Int): Long {
         val r = rows.getOrNull(position) ?: return position.toLong()

@@ -15,7 +15,7 @@ App Settings › Project Dependencies › Custom Pub Dependencies › Add Pub De
 oneone_q_widget:
   git:
     url: https://github.com/ispakk1994-cloud/11q.git
-    ref: 4ab24b7972eac8509f493a4bbba7b717db56496b
+    ref: <0.3.0 커밋 번호>
 ```
 
 FlutterFlow 코드 편집기는 의존성을 처음 받은 판으로 기억해요(`ref`가 없으면 새 판을 올려도 편집기는 옛 판으로 검사해 "isn't defined" 오류). 그래서 늘 `ref: <커밋 번호>`로 묶고, 새 판이 나오면 이 번호만 바꿔요. 판 번호: 0.1.0 = `1bf95df` · 0.1.1 = `51b9d33` · 0.2.0 = `4ab24b7`.
@@ -27,7 +27,7 @@ import 'package:oneone_q_widget/oneone_q_widget.dart';
 
 await OneoneQWidget.save(feedJson);                 // 위젯이 그릴 목록(JSON)
 await OneoneQWidget.setBackgroundHandler(handler);  // 체크 · 15분 확인 · ＋ 작은 창 넣기 때 화면 없이 부를 함수(글자를 돌려주면 작은 창이 받음)
-final a = await OneoneQWidget.takeAction();         // 작은 창 `앱에서 적기`(또는 앱을 처음 열 때 ＋)로 열렸으면 'add'
+final a = await OneoneQWidget.takeAction();         // 작은 창 `앱에서 적기`면 'add' · 작은 창 카메라면 'camera'
 OneoneQWidget.actions.listen((_) { /* 앱이 켜져 있을 때 ＋ */ });
 ```
 

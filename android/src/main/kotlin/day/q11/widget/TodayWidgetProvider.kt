@@ -10,11 +10,14 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.widget.RemoteViews
 
 /**
  * 11Q 홈 화면 위젯 · 오늘 할 일(위젯 A).
- * - 머리: 11Q · 오늘 · N개 남음 · ＋(0.2.0: 홈 화면 위 작은 창 QuickAddActivity · 앱은 안 열림)
+ * - 머리: 11Q · 오늘 · N개 남음 · ＋ 적기(0.3.0 시안 알약 · 누르는 곳 넓게 → 홈 화면 위 작은 창 QuickAddActivity)
+ *   앱이 열리는 곳은 왼쪽 11Q · 오늘 · N개 남음만(＋ 옆을 눌러 앱이 열리던 것)
+ * - 글자 크기: 위젯을 꾹 눌러 `설정`(WidgetSettingsActivity) · 보통 · 크게(처음) · 아주 크게
  * - 목록: 앱 대시보드와 같은 순서(긴급 → 지난 일 → 오늘) · 체크칸으로 끝냄 · 지금 칩
  * - 목록은 앱이 save로 넘긴 JSON(WidgetStore)을 그대로 그린다.
  */
@@ -125,6 +128,8 @@ class TodayWidgetProvider : AppWidgetProvider() {
         fun buildViews(context: Context, widgetId: Int): RemoteViews {
             val feed = WidgetStore.feed(context)
             val th = WidgetTheme(feed?.optJSONObject("theme"))
+            val level = WidgetStore.sizeLevel(context)
+            val en = feed?.optString("lang", "") == "en"
             val rv = RemoteViews(context.packageName, R.layout.q11_widget_today)
 
             rv.setInt(R.id.q11_card, "setBackgroundResource", th.bgRes)
@@ -134,24 +139,29 @@ class TodayWidgetProvider : AppWidgetProvider() {
             rv.setTextColor(R.id.q11_title, th.ink)
             rv.setTextViewText(R.id.q11_count, text(feed, "count", ""))
             rv.setTextColor(R.id.q11_count, th.meta)
+            rv.setTextViewTextSize(R.id.q11_title, TypedValue.COMPLEX_UNIT_SP, WidgetSize.TITLE[level])
+            rv.setTextViewTextSize(R.id.q11_count, TypedValue.COMPLEX_UNIT_SP, WidgetSize.COUNT[level])
             tint(rv, R.id.q11_logo, th.accent, chipShape(th))
             rv.setTextColor(R.id.q11_logo, th.accentInk)
 
-            // ＋ : 네온은 테두리 있는 알약 · 스위스는 네모 · 나머지 동그라미
+            // ＋ 적기 알약(시안): 네온은 분홍 선 알약 · 스위스는 네모 · 나머지 알약에 accentHex
             when {
-                th.mode == "neon" -> rv.setInt(R.id.q11_plus, "setBackgroundResource", R.drawable.q11_plus_neon)
+                th.mode == "neon" -> rv.setInt(R.id.q11_plus, "setBackgroundResource", R.drawable.q11_pill_neon)
                 th.square -> tint(rv, R.id.q11_plus, th.accent, "square")
                 else -> {
-                    rv.setInt(R.id.q11_plus, "setBackgroundResource", R.drawable.q11_circle_white)
+                    rv.setInt(R.id.q11_plus, "setBackgroundResource", R.drawable.q11_pill_white)
                     tint(rv, R.id.q11_plus, th.accent, null)
                 }
             }
-            tintImage(rv, R.id.q11_plus, th.accentInk)
+            tintImage(rv, R.id.q11_plus_icon, th.accentInk)
+            rv.setTextColor(R.id.q11_plus_text, th.accentInk)
+            rv.setTextViewText(R.id.q11_plus_text, if (en) "Add" else "적기")
 
             // 빈 목록 · 로그아웃 · 아직 앱을 안 연 때
             val empty = if (feed == null) context.getString(R.string.q11_widget_open_app) else text(feed, "empty", "")
             rv.setTextViewText(R.id.q11_empty, empty)
             rv.setTextColor(R.id.q11_empty, th.meta)
+            rv.setTextViewTextSize(R.id.q11_empty, TypedValue.COMPLEX_UNIT_SP, WidgetSize.EMPTY[level])
 
             // 목록
             val svc = Intent(context, TodayListService::class.java)
@@ -162,12 +172,13 @@ class TodayWidgetProvider : AppWidgetProvider() {
             rv.setEmptyView(R.id.q11_list, R.id.q11_empty)
             rv.setPendingIntentTemplate(R.id.q11_list, itemTemplate(context))
 
-            // 누르면: 머리 · 빈 칸 = 앱 · ＋ = 작은 창(앱을 한 번도 안 열었으면 작은 창이 앱 적기 칸을 대신 연다)
+            // 누르면: 왼쪽 11Q · 오늘 · 빈 칸 = 앱 · ＋ 적기(알약 둘레 넓게) = 작은 창
+            //   (앱을 한 번도 안 열었으면 작은 창이 앱 적기 칸을 대신 연다)
             openApp(context, null)?.let {
-                rv.setOnClickPendingIntent(R.id.q11_head, it)
+                rv.setOnClickPendingIntent(R.id.q11_open, it)
                 rv.setOnClickPendingIntent(R.id.q11_empty, it)
             }
-            rv.setOnClickPendingIntent(R.id.q11_plus, quickAdd(context))
+            rv.setOnClickPendingIntent(R.id.q11_plus_area, quickAdd(context))
             return rv
         }
 
@@ -186,7 +197,7 @@ class TodayWidgetProvider : AppWidgetProvider() {
 
         /**
          * 흰 모양에 테마 색을 입힌다(안드로이드 12 이상). 그 아래는 네모 바탕색.
-         * shape: "round"(칩 · 로고 모서리 5) · "square"(스위스) · null(지금 바탕 모양 그대로 · ＋ 동그라미).
+         * shape: "round"(칩 · 로고 모서리 5) · "square"(스위스) · null(지금 바탕 모양 그대로 · ＋ 적기 알약).
          */
         fun tint(rv: RemoteViews, viewId: Int, color: Int, shape: String?) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 할 일 한 줄: 체크칸 · (지금) · (긴급/중요) · 제목 · 오른쪽 날짜 -->
+<!-- 할 일 한 줄(보통): 체크칸 · (지금) · (긴급/중요) · 제목 · 오른쪽 날짜 · 글자 크기는 위젯 설정 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/q11_row"
     android:layout_width="match_parent"

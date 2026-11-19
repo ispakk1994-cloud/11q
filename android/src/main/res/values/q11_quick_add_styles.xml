@@ -16,6 +16,11 @@
         <item name="android:windowAnimationStyle">@style/Q11QuickAddAnim</item>
     </style>
 
+    <!-- 위젯 `설정`(글자 크기): 같은 떠 있는 창 · 키보드 없음 -->
+    <style name="Q11WidgetSettings" parent="Q11QuickAdd">
+        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+    </style>
+
     <style name="Q11QuickAddAnim">
         <item name="android:windowEnterAnimation">@anim/q11_qa_in</item>
         <item name="android:windowExitAnimation">@anim/q11_qa_out</item>

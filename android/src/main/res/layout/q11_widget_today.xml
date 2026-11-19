@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 11Q 위젯 A · 오늘 할 일 (시안 WidgetSizes 갤럭시 4×2 · 늘이면 줄이 더 보임 · 0.2.0 글자 두 단계 크게) -->
+<!-- 11Q 위젯 A · 오늘 할 일 (시안 WidgetSizes 갤럭시 4×2 · 늘이면 줄이 더 보임 · 0.3.0 ＋ 적기 알약 · 글자 크기는 위젯 설정) -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/q11_root"
     android:layout_width="match_parent"
@@ -12,61 +12,103 @@
         android:background="@drawable/q11_bg_glass"
         android:orientation="vertical"
         android:paddingStart="14dp"
-        android:paddingTop="10dp"
+        android:paddingTop="6dp"
         android:paddingEnd="12dp"
         android:paddingBottom="6dp">
 
         <LinearLayout
             android:id="@+id/q11_head"
             android:layout_width="match_parent"
-            android:layout_height="38dp"
+            android:layout_height="46dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/q11_logo"
-                android:layout_width="26dp"
-                android:layout_height="22dp"
-                android:background="@drawable/q11_round_white"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:text="@string/q11_widget_title"
-                android:textColor="#FFFFFFFF"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/q11_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:text="@string/q11_widget_today"
-                android:textColor="#FFFFFFFF"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/q11_count"
+            <!-- 누르면 앱(왼쪽 11Q · 오늘 · N개 남음만) -->
+            <LinearLayout
+                android:id="@+id/q11_open"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:ellipsize="end"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:textColor="#9EFFFFFF"
-                android:textSize="13.5sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/q11_plus"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/q11_circle_white"
+                <TextView
+                    android:id="@+id/q11_logo"
+                    android:layout_width="26dp"
+                    android:layout_height="22dp"
+                    android:background="@drawable/q11_round_white"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="@string/q11_widget_title"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/q11_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:text="@string/q11_widget_today"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/q11_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:textColor="#9EFFFFFF"
+                    android:textSize="13.5sp" />
+            </LinearLayout>
+
+            <!-- ＋ 적기(시안 알약) · 누르는 곳은 알약보다 넓게(머리 높이 전체 + 왼쪽 14) -->
+            <FrameLayout
+                android:id="@+id/q11_plus_area"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/q11_widget_add"
-                android:padding="7dp"
-                android:src="@drawable/q11_ic_plus" />
+                android:paddingStart="14dp">
+
+                <LinearLayout
+                    android:id="@+id/q11_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/q11_pill_white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="13dp">
+
+                    <ImageView
+                        android:id="@+id/q11_plus_icon"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/q11_ic_plus" />
+
+                    <TextView
+                        android:id="@+id/q11_plus_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:importantForAccessibility="no"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="@string/q11_widget_add_short"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
 
         <FrameLayout

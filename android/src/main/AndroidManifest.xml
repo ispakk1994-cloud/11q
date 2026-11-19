@@ -45,5 +45,18 @@
             android:taskAffinity="day.q11.widget.quickadd"
             android:theme="@style/Q11QuickAdd"
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
+
+        <!-- 위젯을 꾹 눌러 `설정` → 글자 크기(런처가 여는 화면이라 exported) -->
+        <activity
+            android:name="day.q11.widget.WidgetSettingsActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density|fontScale"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:taskAffinity="day.q11.widget.settings"
+            android:theme="@style/Q11WidgetSettings">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

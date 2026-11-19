@@ -16,6 +16,7 @@ internal object WidgetStore {
     private const val KEY_PENDING = "pending"
     const val KEY_DISPATCHER = "dispatcher"
     const val KEY_CALLBACK = "callback"
+    private const val KEY_SIZE = "size"
 
     /** 체크한 뒤 이만큼 지나도 목록이 안 바뀌면 체크 표시를 푼다(서버에 못 간 경우). */
     private const val PENDING_TTL_MS = 3 * 60 * 1000L
@@ -50,6 +51,13 @@ internal object WidgetStore {
 
     fun saveHandles(context: Context, dispatcher: Long, callback: Long) {
         prefs(context).edit().putLong(KEY_DISPATCHER, dispatcher).putLong(KEY_CALLBACK, callback).apply()
+    }
+
+    /** 위젯 글자 크기(위젯을 꾹 눌러 `설정`): 0 보통 · 1 크게(처음) · 2 아주 크게. 놓인 위젯 모두 같게. */
+    fun sizeLevel(context: Context): Int = prefs(context).getInt(KEY_SIZE, 1).coerceIn(0, 2)
+
+    fun setSizeLevel(context: Context, level: Int) {
+        prefs(context).edit().putInt(KEY_SIZE, level.coerceIn(0, 2)).apply()
     }
 
     // ── 위젯에서 막 체크한 일 ─────────────────────────────
@@ -188,4 +196,13 @@ internal class WidgetTheme(o: JSONObject?) {
             return Color.argb(na, Color.red(color), Color.green(color), Color.blue(color))
         }
     }
+}
+
+/** 글자 크기 단계별 줄 · 묶음 머리 모양과 머리 글자 크기(보통 · 크게 · 아주 크게). */
+internal object WidgetSize {
+    val ROW = intArrayOf(R.layout.q11_widget_row, R.layout.q11_widget_row_l, R.layout.q11_widget_row_xl)
+    val HEAD = intArrayOf(R.layout.q11_widget_head, R.layout.q11_widget_head_l, R.layout.q11_widget_head_xl)
+    val TITLE = floatArrayOf(17f, 18f, 19.5f)
+    val COUNT = floatArrayOf(13.5f, 14.5f, 15.5f)
+    val EMPTY = floatArrayOf(14f, 15f, 16f)
 }

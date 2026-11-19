@@ -44,7 +44,7 @@ class OneoneQWidget {
   /// 마지막으로 적은 내용(JSON 글자).
   static Future<String?> lastFeed() => _call<String>('lastFeed');
 
-  /// 위젯 ＋로 앱이 열렸으면 'add'(한 번 가져가면 지워짐).
+  /// 작은 창 `앱에서 적기`로 열렸으면 'add' · 작은 창 카메라로 열렸으면 'camera'(한 번 가져가면 지워짐).
   static Future<String?> takeAction() => _call<String>('takeAction');
 
   /// 앱이 켜져 있을 때 위젯 ＋를 누르면 알려 준다(그 뒤 takeAction으로 가져간다).

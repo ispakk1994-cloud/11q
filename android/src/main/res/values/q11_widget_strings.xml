@@ -12,4 +12,5 @@
     <string name="q11_widget_pv_1">Draft the monthly report</string>
     <string name="q11_widget_pv_2">Book the team dinner</string>
     <string name="q11_widget_pv_3">Clean up meeting notes</string>
+    <string name="q11_widget_add_short">Add</string>
 </resources>

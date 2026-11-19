@@ -11,4 +11,5 @@
     <string name="q11_widget_pv_1">월말 보고서 초안</string>
     <string name="q11_widget_pv_2">팀 회식 장소 예약</string>
     <string name="q11_widget_pv_3">회의록 정리</string>
+    <string name="q11_widget_add_short">적기</string>
 </resources>

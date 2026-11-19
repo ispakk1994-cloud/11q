@@ -2,11 +2,7 @@ package day.q11.widget
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -14,8 +10,10 @@ import android.os.Looper
 import android.speech.RecognizerIntent
 import android.text.Editable
 import android.text.InputType
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextWatcher
-import android.util.TypedValue
+import android.text.style.AbsoluteSizeSpan
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -29,20 +27,21 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.json.JSONObject
-import kotlin.math.max
 import kotlin.math.roundToInt
 
 /**
  * 위젯 ＋ → 홈 화면 위 작은 창(1.1 시안 WidgetGalaxyA `＋적기`). 앱은 열리지 않는다.
  * 적고 `넣기` → 앱 코드(Dart · q11WidgetBg 'add')를 화면 없이 실행 → 서버 /pc/send(AI 1회)로 할 일을 넣고
  * 그 일의 폰 알림까지 → 창이 닫히며 아래 `넣었어요 · 제목 · 언제 · 되돌리기`(5초) → 되돌리기 = /pc/undo.
- * 색 · 모서리 · 선 · 그림자는 앱이 넘긴 테마 토큰(확인 창 · 입력칸 · 보조 버튼 · 토스트와 같은 값).
+ * 색 · 모서리 · 선 · 그림자는 앱이 넘긴 테마 토큰(확인 창 · 입력칸 · 보조 버튼 · 토스트와 같은 값 · SheetPaint).
+ * 0.3.0: 적기 전엔 넣기 자리에 카메라(누르면 11Q가 열리며 대화 탭 카메라) · 적으면 넣기 · 힌트는 작게 한 줄.
  * 앱을 한 번도 안 열었으면 이 창 대신 앱의 새 할 일 칸을 연다.
  */
 class QuickAddActivity : Activity() {
 
     private val main = Handler(Looper.getMainLooper())
     private lateinit var th: WidgetTheme
+    private lateinit var brush: SheetPaint
     private var en = false
     private var signedIn = false
     private var held = false
@@ -60,6 +59,7 @@ class QuickAddActivity : Activity() {
     private lateinit var input: EditText
     private lateinit var mic: ImageView
     private lateinit var send: TextView
+    private lateinit var camera: ImageView
     private lateinit var busyView: TextView
     private lateinit var help: TextView
     private lateinit var openBtn: TextView
@@ -89,6 +89,7 @@ class QuickAddActivity : Activity() {
         en = feed.optString("lang", "ko") == "en"
         signedIn = feed.optString("uid", "").isNotEmpty()
         th = WidgetTheme(feed.optJSONObject("theme"))
+        brush = SheetPaint(this, th)
 
         setContentView(R.layout.q11_quick_add)
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -117,6 +118,7 @@ class QuickAddActivity : Activity() {
         input = findViewById(R.id.q11_qa_input)
         mic = findViewById(R.id.q11_qa_mic)
         send = findViewById(R.id.q11_qa_send)
+        camera = findViewById(R.id.q11_qa_camera)
         busyView = findViewById(R.id.q11_qa_busy)
         help = findViewById(R.id.q11_qa_help)
         openBtn = findViewById(R.id.q11_qa_open)
@@ -125,96 +127,34 @@ class QuickAddActivity : Activity() {
         undo = findViewById(R.id.q11_qa_undo)
     }
 
-    private fun dp(v: Float): Float =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, resources.displayMetrics)
-
-    /** 칠한 네모(모서리 · 선). 선 굵기는 테마 borderWidth. */
-    private fun box(fill: Int, stroke: Int, strokeW: Float, radius: Float): GradientDrawable =
-        GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
-            cornerRadius = dp(radius)
-            setColor(fill)
-            if (strokeW > 0f && Color.alpha(stroke) > 0) setStroke(max(1, dp(strokeW).roundToInt()), stroke)
-        }
-
-    /** 그림자에 흐림이 없는 테마(종이 · 다이어리) = 오른쪽 아래로 민 같은 모양. */
-    private fun hardShadow(): Boolean =
-        Color.alpha(th.shadow) > 0 && th.shadowBlur <= 0.5f && (th.shadowX != 0f || th.shadowY != 0f)
-
-    private fun card(fill: Int, stroke: Int, radius: Float): Drawable {
-        val face = box(fill, stroke, th.borderW, radius)
-        if (!hardShadow()) return face
-        val shade = box(th.shadow, 0, 0f, radius)
-        val sx = dp(th.shadowX).roundToInt()
-        val sy = dp(th.shadowY).roundToInt()
-        val ld = LayerDrawable(arrayOf<Drawable>(shade, face))
-        ld.setLayerInset(0, max(0, sx), max(0, sy), max(0, -sx), max(0, -sy))
-        ld.setLayerInset(1, max(0, -sx), max(0, -sy), max(0, sx), max(0, sy))
-        return ld
-    }
-
-    /** 바탕을 바꿔도 안쪽 여백은 그대로(LayerDrawable이 여백을 바꾸지 않게). */
-    private fun setBg(v: View, d: Drawable) {
-        val l = v.paddingLeft
-        val t = v.paddingTop
-        val r = v.paddingRight
-        val b = v.paddingBottom
-        v.background = d
-        v.setPadding(l, t, r, b)
-    }
-
-    /** 흐린 그림자(유리 · 네온 · 스위스 · 화이트). 토큰이 투명하면 앱 토스트와 같게 검정 45% · 흐림 28. */
-    private fun lift(v: View) {
-        if (hardShadow()) {
-            v.elevation = 0f
-            return
-        }
-        val clear = Color.alpha(th.shadow) == 0
-        val c = if (clear) 0x73000000 else th.shadow
-        val blur = if (clear) 28f else max(6f, th.shadowBlur)
-        v.elevation = dp(blur / 2f)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            v.outlineSpotShadowColor = c
-            v.outlineAmbientShadowColor = c
-        }
-    }
-
     private fun paint() {
-        setBg(sheet, card(th.sheet, th.line, th.dlgRadius))
-        lift(sheet)
-        for (id in intArrayOf(R.id.q11_qa_logo, R.id.q11_qa_tlogo)) {
-            val logo = findViewById<TextView>(id)
-            setBg(logo, box(th.accent, 0, 0f, th.tagRadius))
-            logo.setTextColor(th.accentInk)
-        }
+        brush.sheet(sheet)
+        brush.logo(findViewById(R.id.q11_qa_logo))
+        brush.logo(findViewById(R.id.q11_qa_tlogo))
         findViewById<TextView>(R.id.q11_qa_title).setTextColor(th.ink)
-        val close = findViewById<ImageView>(R.id.q11_qa_close)
-        setBg(close, box(th.ctl, th.ctlLine, th.borderW, th.ctlRadius))
-        close.imageTintList = ColorStateList.valueOf(th.ctlInk)
-        setBg(mic, box(th.ctl, th.ctlLine, th.borderW, th.ctlRadius))
-        mic.imageTintList = ColorStateList.valueOf(th.ctlInk)
+        brush.ctl(findViewById<ImageView>(R.id.q11_qa_close))
+        brush.ctl(mic)
+        brush.accentOutline(camera)
 
         // 입력칸: 적는 중이라 테두리는 accentHex(시안) · 힌트 metaHex
-        setBg(input, box(th.field, th.accent, th.borderW, th.ctlRadius))
+        brush.setBg(input, brush.box(th.field, th.accent, th.borderW, th.ctlRadius))
         input.setTextColor(th.ink)
         input.setHintTextColor(th.meta)
         input.highlightColor = WidgetTheme.alpha(th.accent, 0.35f)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             input.textCursorDrawable = GradientDrawable().apply {
                 setColor(th.accent)
-                setSize(dp(2f).roundToInt(), dp(22f).roundToInt())
+                setSize(brush.dp(2f).roundToInt(), brush.dp(22f).roundToInt())
             }
         }
-        setBg(send, box(th.accent, th.accentLine, th.borderW, th.ctlRadius))
-        send.setTextColor(th.accentInk)
+        brush.primary(send)
         busyView.setTextColor(WidgetTheme.alpha(th.ink, 0.8f))
         help.setTextColor(th.meta)
-        setBg(openBtn, box(th.ctl, th.ctlLine, th.borderW, th.ctlRadius))
-        openBtn.setTextColor(th.ctlInk)
+        brush.ctl(openBtn)
 
         // 토스트 = 앱 토스트와 같은 토큰(alertFillHex · ctlBorderHex × borderWidth · pillRadius · 되돌리기 linkHex)
-        setBg(toast, card(th.alertFill, th.ctlLine, th.pillRadius))
-        lift(toast)
+        brush.setBg(toast, brush.card(th.alertFill, th.ctlLine, th.pillRadius))
+        brush.lift(toast)
         toastText.setTextColor(th.ink)
         undo.setTextColor(th.link)
     }
@@ -223,7 +163,11 @@ class QuickAddActivity : Activity() {
         findViewById<TextView>(R.id.q11_qa_title).text = t("title")
         findViewById<View>(R.id.q11_qa_close).contentDescription = t("close")
         mic.contentDescription = t("mic")
-        input.hint = t("hint")
+        camera.contentDescription = t("camera")
+        // 힌트는 적는 글(17)보다 작게 한 줄(14)
+        val hint = SpannableString(t("hint"))
+        hint.setSpan(AbsoluteSizeSpan(14, true), 0, hint.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        input.hint = hint
         send.text = t("send")
         help.text = t("help")
         undo.text = t("undo")
@@ -252,6 +196,7 @@ class QuickAddActivity : Activity() {
         })
         send.setOnClickListener { submit() }
         mic.setOnClickListener { listen() }
+        camera.setOnClickListener { if (phase == 0) openApp("camera") }
         findViewById<View>(R.id.q11_qa_close).setOnClickListener { close() }
         undo.setOnClickListener { undoAdd() }
         openBtn.setOnClickListener { openApp(openAction) }
@@ -259,8 +204,11 @@ class QuickAddActivity : Activity() {
         sendState()
     }
 
+    /** 적기 전엔 카메라 · 글자를 적으면 넣기(시안). */
     private fun sendState() {
-        send.alpha = if (input.text.isNullOrBlank()) 0.5f else 1f
+        val empty = input.text.isNullOrBlank()
+        send.visibility = if (empty) View.GONE else View.VISIBLE
+        camera.visibility = if (empty) View.VISIBLE else View.GONE
     }
 
     /** 이 창이 화면 아래 · 키보드 아래로 그려지면(안드로이드 15 이상 꽉 찬 화면) 그만큼 올린다. */
@@ -552,7 +500,7 @@ class QuickAddActivity : Activity() {
 
         private val KO = mapOf(
             "title" to "할 일 적기",
-            "hint" to "말하듯 적어요 · 5시 거래처 전화",
+            "hint" to "예) 내일 3시 치과 예약",
             "send" to "넣기",
             "help" to "앱은 안 열려요 · 말하듯 적으면 AI가 날짜 · 시각까지 정리해요",
             "busy" to "AI가 날짜를 정리하는 중",
@@ -572,12 +520,13 @@ class QuickAddActivity : Activity() {
             "fail" to "보내지 못했어요 · 잠시 뒤 다시 눌러 주세요",
             "micPrompt" to "할 일을 말해 주세요",
             "close" to "닫기",
-            "mic" to "말로 적기"
+            "mic" to "말로 적기",
+            "camera" to "사진으로 적기(11Q 카메라)"
         )
 
         private val EN = mapOf(
             "title" to "Add a task",
-            "hint" to "Just type it · Call the client at 5",
+            "hint" to "e.g. Dentist tomorrow at 3",
             "send" to "Add",
             "help" to "11Q stays closed · AI sorts out the date and time",
             "busy" to "AI is sorting out the date",
@@ -597,7 +546,8 @@ class QuickAddActivity : Activity() {
             "fail" to "Couldn't send · please try again in a moment",
             "micPrompt" to "Say your task",
             "close" to "Close",
-            "mic" to "Speak"
+            "mic" to "Speak",
+            "camera" to "Add from a photo (11Q camera)"
         )
     }
 }

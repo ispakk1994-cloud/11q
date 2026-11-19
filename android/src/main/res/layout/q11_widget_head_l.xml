@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 묶음 머리(크게 · 긴급 · N / 지난 일 · N / 오늘 · N) — 높은 위젯에서만 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="2dp">
+
+    <TextView
+        android:id="@+id/q11_head_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textSize="14.5sp"
+        android:textStyle="bold" />
+</LinearLayout>
