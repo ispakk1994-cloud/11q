@@ -120,8 +120,34 @@ internal class WidgetTheme(o: JSONObject?) {
     val chkDone: Int = color(o, "chkDone", 0xFF6C5AFF)
     val chkDoneInk: Int = color(o, "chkDoneInk", 0xFFFFFFFF)
     val doneTitle: Int = color(o, "doneTitle", 0x80FFFFFF)
-    val tagRadius: Float = (o?.optDouble("tag", 6.0) ?: 6.0).toFloat()
-    val chkRadius: Float = (o?.optDouble("chk", 7.0) ?: 7.0).toFloat()
+    val tagRadius: Float = num(o, "tag", 6.0)
+    val chkRadius: Float = num(o, "chk", 7.0)
+
+    // ── 작은 창(0.2.0 · 위젯 ＋적기) · 앱의 확인 창 · 입력칸 · 보조 버튼 · 토스트와 같은 토큰 ──
+    /** 창 바탕 dlgFillHex · 테두리 cardBorderHex × borderWidth · 모서리 dlgRadius */
+    val sheet: Int = color(o, "sheet", 0xF7101014)
+    val line: Int = color(o, "line", 0x38FFFFFF)
+    val borderW: Float = num(o, "bw", 1.0)
+    val dlgRadius: Float = num(o, "dlgR", 18.0)
+    /** 입력칸 inputFillHex · inputBorderHex(적는 중엔 accentHex) · 모서리 ctlRadius */
+    val field: Int = color(o, "field", 0x73000000)
+    val fieldLine: Int = color(o, "fieldLine", 0x58FFFFFF)
+    val ctlRadius: Float = num(o, "ctlR", 12.0)
+    /** 보조 버튼(닫기 · 말로 적기) ctlFillHex · ctlBorderHex · ctlInkHex */
+    val ctl: Int = color(o, "ctl", 0x1CFFFFFF)
+    val ctlLine: Int = color(o, "ctlLine", 0x38FFFFFF)
+    val ctlInk: Int = color(o, "ctlInk", 0xFFFFFFFF)
+    /** 주 버튼 테두리 accentLineHex */
+    val accentLine: Int = color(o, "accentLine", 0x00000000)
+    /** 토스트 alertFillHex · 되돌리기 linkHex · 모서리 pillRadius */
+    val alertFill: Int = color(o, "alert", 0xFC221F2E)
+    val link: Int = color(o, "link", 0xFFB8AFFF)
+    val pillRadius: Float = num(o, "pillR", 999.0)
+    /** 그림자 shadowHex · shadowX · shadowY · shadowBlur */
+    val shadow: Int = color(o, "shadow", 0x00000000)
+    val shadowX: Float = num(o, "shX", 0.0)
+    val shadowY: Float = num(o, "shY", 0.0)
+    val shadowBlur: Float = num(o, "shBlur", 0.0)
 
     val square: Boolean get() = chkRadius <= 1f
 
@@ -136,6 +162,12 @@ internal class WidgetTheme(o: JSONObject?) {
         }
 
     companion object {
+        private fun num(o: JSONObject?, key: String, def: Double): Float {
+            if (o == null || !o.has(key)) return def.toFloat()
+            val v = o.optDouble(key, def)
+            return (if (v.isNaN()) def else v).toFloat()
+        }
+
         private fun color(o: JSONObject?, key: String, def: Long): Int {
             if (o == null || !o.has(key)) return def.toInt()
             return try {

@@ -2,6 +2,13 @@
     <!-- 30분 갱신 예약이 재부팅 뒤에도 남게(앱에 이미 있는 권한) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- 작은 창 `말로 적기`: 폰의 음성 입력 창이 있는지 보려면(안드로이드 11 이상) -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+        </intent>
+    </queries>
+
     <application>
         <!-- 11Q 홈 화면 위젯 · 오늘 할 일 -->
         <receiver
@@ -22,10 +29,21 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <!-- 체크 · 30분 갱신을 뒤에서(앱 코드 실행) -->
+        <!-- 체크 · 15분 확인을 뒤에서(앱 코드 실행) -->
         <service
             android:name="day.q11.widget.WidgetJobService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- 위젯 ＋ → 홈 화면 위 작은 창(앱은 안 열림 · 최근 앱 목록에 안 남음) -->
+        <activity
+            android:name="day.q11.widget.QuickAddActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density|fontScale"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:taskAffinity="day.q11.widget.quickadd"
+            android:theme="@style/Q11QuickAdd"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
     </application>
 </manifest>

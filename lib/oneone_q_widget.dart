@@ -53,11 +53,15 @@ class OneoneQWidget {
     return _actions.stream;
   }
 
-  /// 위젯 체크 · 30분 갱신 때 앱 화면 없이 부를 함수를 넘긴다.
+  /// 위젯 체크 · 15분 확인 · ＋ 작은 창 넣기 때 앱 화면 없이 부를 함수를 넘긴다.
   /// handler는 맨 바깥(top-level) 함수여야 하고 `@pragma('vm:entry-point')`를 붙인다.
-  /// handler(action, id): action = 'done' · 'undo' · 'refresh'.
+  /// handler(action, id):
+  ///   'done' · 'undo'(id = 할 일) · 'refresh'(15분마다 · id 없음)
+  ///   'add'(id = 작은 창에 적은 글) · 'undoAdd'(id = 넣은 할 일들 · 쉼표로)
+  /// 글자(JSON)를 돌려주면 작은 창이 받는다(예: {"ok":true,"items":[{"id","title","label"}]}).
+  /// 예전처럼 아무것도 돌려주지 않는 함수(Future<void>)도 그대로 된다.
   static Future<bool?> setBackgroundHandler(
-      Future<void> Function(String action, String id) handler) async {
+      Future<Object?> Function(String action, String id) handler) async {
     if (!isSupported) return null;
     final d = PluginUtilities.getCallbackHandle(oneoneQWidgetDispatcher);
     final c = PluginUtilities.getCallbackHandle(handler);
@@ -106,11 +110,12 @@ void oneoneQWidgetDispatcher() {
     if (fn == null) return false;
     try {
       final r = Function.apply(fn, <Object?>['${a['action'] ?? ''}', '${a['id'] ?? ''}']);
-      if (r is Future) await r;
+      final v = r is Future ? await r : r;
+      // 작은 창 결과(JSON 글자)는 그대로 넘긴다
+      return v is String ? v : true;
     } catch (_) {
       return false;
     }
-    return true;
   });
   ch.invokeMethod<void>('ready');
 }

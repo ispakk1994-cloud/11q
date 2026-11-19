@@ -3,27 +3,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/q11_row"
     android:layout_width="match_parent"
-    android:layout_height="36dp"
+    android:layout_height="42dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <FrameLayout
         android:id="@+id/q11_chk"
-        android:layout_width="32dp"
+        android:layout_width="34dp"
         android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/q11_chk_box"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_gravity="center_vertical|start"
             android:contentDescription="@string/q11_widget_check"
             android:src="@drawable/q11_chk_round" />
 
         <ImageView
             android:id="@+id/q11_chk_fill"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_gravity="center_vertical|start"
             android:importantForAccessibility="no"
             android:src="@drawable/q11_chk_round_fill"
@@ -31,11 +31,11 @@
 
         <ImageView
             android:id="@+id/q11_chk_mark"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_gravity="center_vertical|start"
             android:importantForAccessibility="no"
-            android:padding="3dp"
+            android:padding="3.5dp"
             android:src="@drawable/q11_ic_check"
             android:visibility="gone" />
     </FrameLayout>
@@ -51,28 +51,28 @@
         <TextView
             android:id="@+id/q11_now"
             android:layout_width="wrap_content"
-            android:layout_height="17dp"
+            android:layout_height="19dp"
             android:layout_marginEnd="5dp"
             android:background="@drawable/q11_round_white"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textSize="10sp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textSize="11sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/q11_flag"
             android:layout_width="wrap_content"
-            android:layout_height="17dp"
+            android:layout_height="19dp"
             android:layout_marginEnd="5dp"
             android:background="@drawable/q11_round_white"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textSize="10sp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textSize="11sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -84,7 +84,7 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="1"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
@@ -94,6 +94,6 @@
             android:layout_marginStart="8dp"
             android:includeFontPadding="false"
             android:maxLines="1"
-            android:textSize="11sp" />
+            android:textSize="12.5sp" />
     </LinearLayout>
 </LinearLayout>

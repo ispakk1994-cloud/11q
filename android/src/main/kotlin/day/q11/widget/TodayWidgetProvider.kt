@@ -14,7 +14,7 @@ import android.widget.RemoteViews
 
 /**
  * 11Q 홈 화면 위젯 · 오늘 할 일(위젯 A).
- * - 머리: 11Q · 오늘 · N개 남음 · ＋(앱이 열리며 적기 칸)
+ * - 머리: 11Q · 오늘 · N개 남음 · ＋(0.2.0: 홈 화면 위 작은 창 QuickAddActivity · 앱은 안 열림)
  * - 목록: 앱 대시보드와 같은 순서(긴급 → 지난 일 → 오늘) · 체크칸으로 끝냄 · 지금 칩
  * - 목록은 앱이 save로 넘긴 JSON(WidgetStore)을 그대로 그린다.
  */
@@ -162,12 +162,12 @@ class TodayWidgetProvider : AppWidgetProvider() {
             rv.setEmptyView(R.id.q11_list, R.id.q11_empty)
             rv.setPendingIntentTemplate(R.id.q11_list, itemTemplate(context))
 
-            // 누르면: 머리 · 빈 칸 = 앱 · ＋ = 앱 적기 칸
+            // 누르면: 머리 · 빈 칸 = 앱 · ＋ = 작은 창(앱을 한 번도 안 열었으면 작은 창이 앱 적기 칸을 대신 연다)
             openApp(context, null)?.let {
                 rv.setOnClickPendingIntent(R.id.q11_head, it)
                 rv.setOnClickPendingIntent(R.id.q11_empty, it)
             }
-            openApp(context, "add")?.let { rv.setOnClickPendingIntent(R.id.q11_plus, it) }
+            rv.setOnClickPendingIntent(R.id.q11_plus, quickAdd(context))
             return rv
         }
 
@@ -230,6 +230,17 @@ class TodayWidgetProvider : AppWidgetProvider() {
                 launch.putExtra(EXTRA_ACTION, action)
             }
             return launch
+        }
+
+        private fun quickAdd(context: Context): PendingIntent {
+            val i = Intent(context, QuickAddActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            return PendingIntent.getActivity(
+                context,
+                12,
+                i,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
         }
 
         private fun openApp(context: Context, action: String?): PendingIntent? {

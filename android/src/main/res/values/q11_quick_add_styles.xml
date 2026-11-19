@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 위젯 ＋ 작은 창: 아래에 뜨는 떠 있는 창(키보드 위) · 뒤는 45% 어둡게(시안) · 바깥을 누르면 닫힘 -->
+    <style name="Q11QuickAdd" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowElevation">0dp</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.45</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowSoftInputMode">stateAlwaysVisible|adjustResize</item>
+        <item name="android:windowAnimationStyle">@style/Q11QuickAddAnim</item>
+    </style>
+
+    <style name="Q11QuickAddAnim">
+        <item name="android:windowEnterAnimation">@anim/q11_qa_in</item>
+        <item name="android:windowExitAnimation">@anim/q11_qa_out</item>
+    </style>
+</resources>
