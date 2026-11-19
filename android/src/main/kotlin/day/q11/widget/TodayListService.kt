@@ -73,10 +73,10 @@ internal class TodayListFactory(
 
         // 체크칸
         v.setImageViewResource(R.id.q11_chk_box, if (theme.square) R.drawable.q11_chk_square else R.drawable.q11_chk_round)
-        v.setInt(R.id.q11_chk_box, "setColorFilter", theme.chkBorder)
+        TodayWidgetProvider.tintImage(v, R.id.q11_chk_box, theme.chkBorder)
         v.setImageViewResource(R.id.q11_chk_fill, if (theme.square) R.drawable.q11_chk_square_fill else R.drawable.q11_chk_round_fill)
-        v.setInt(R.id.q11_chk_fill, "setColorFilter", theme.chkDone)
-        v.setInt(R.id.q11_chk_mark, "setColorFilter", theme.chkDoneInk)
+        TodayWidgetProvider.tintImage(v, R.id.q11_chk_fill, theme.chkDone)
+        TodayWidgetProvider.tintImage(v, R.id.q11_chk_mark, theme.chkDoneInk)
         v.setViewVisibility(R.id.q11_chk_fill, if (done) View.VISIBLE else View.GONE)
         v.setViewVisibility(R.id.q11_chk_mark, if (done) View.VISIBLE else View.GONE)
         v.setViewVisibility(R.id.q11_chk_box, if (done) View.GONE else View.VISIBLE)

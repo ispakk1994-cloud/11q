@@ -146,7 +146,7 @@ class TodayWidgetProvider : AppWidgetProvider() {
                     tint(rv, R.id.q11_plus, th.accent, null)
                 }
             }
-            rv.setInt(R.id.q11_plus, "setColorFilter", th.accentInk)
+            tintImage(rv, R.id.q11_plus, th.accentInk)
 
             // 빈 목록 · 로그아웃 · 아직 앱을 안 연 때
             val empty = if (feed == null) context.getString(R.string.q11_widget_open_app) else text(feed, "empty", "")
@@ -198,6 +198,15 @@ class TodayWidgetProvider : AppWidgetProvider() {
             } else {
                 rv.setInt(viewId, "setBackgroundColor", color)
             }
+        }
+
+        /**
+         * 그림(체크칸 · ＋)에 색. setColorFilter는 반투명 색을 흰 그림 위에 겹쳐 흰색 그대로 보이므로
+         * 색은 불투명으로 입히고 투명도는 setImageAlpha로 따로(0.1.1 · 체크칸 테두리가 시안보다 진하던 것).
+         */
+        internal fun tintImage(rv: RemoteViews, viewId: Int, color: Int) {
+            rv.setInt(viewId, "setColorFilter", color or 0xFF000000.toInt())
+            rv.setInt(viewId, "setImageAlpha", (color ushr 24) and 0xFF)
         }
 
         internal fun chipShape(th: WidgetTheme): String = if (th.tagRadius <= 0.5f) "square" else "round"

@@ -70,7 +70,8 @@
             android:layout_marginEnd="12dp"
             android:importantForAccessibility="no"
             android:src="@drawable/q11_chk_round"
-            android:tint="#66FFFFFF" />
+            android:alpha="0.45"
+            android:tint="#FFFFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -118,7 +119,8 @@
             android:layout_marginEnd="12dp"
             android:importantForAccessibility="no"
             android:src="@drawable/q11_chk_round"
-            android:tint="#66FFFFFF" />
+            android:alpha="0.45"
+            android:tint="#FFFFFFFF" />
 
         <TextView
             android:layout_width="0dp"
@@ -151,7 +153,8 @@
             android:layout_marginEnd="12dp"
             android:importantForAccessibility="no"
             android:src="@drawable/q11_chk_round"
-            android:tint="#66FFFFFF" />
+            android:alpha="0.45"
+            android:tint="#FFFFFFFF" />
 
         <TextView
             android:layout_width="0dp"
