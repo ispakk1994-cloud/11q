@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 0.7.0 위젯 3 · 자료에 묻기 4×1(시안 WidgetMoreGalaxy) · 묻기 줄 = 보조 버튼 토큰 · 모서리 pillRadius -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/q11_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/q11_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/q11_bg_glass"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="14dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/q11_logo"
+            android:layout_width="26dp"
+            android:layout_height="22dp"
+            android:background="@drawable/q11_round_white"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/q11_widget_title"
+            android:textColor="#FFFFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@+id/q11_ak_bar_o"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/q11_l_pill"
+            android:padding="1dp">
+
+            <LinearLayout
+                android:id="@+id/q11_ak_bar_i"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/q11_f_pill"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/q11_ak_ask"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp">
+
+                    <ImageView
+                        android:id="@+id/q11_ak_search"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/q11_ic_search" />
+
+                    <TextView
+                        android:id="@+id/q11_ak_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="9dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="@string/q11_ask_hint"
+                        android:textColor="#9EFFFFFF"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/q11_ak_div"
+                    android:layout_width="1dp"
+                    android:layout_height="24dp"
+                    android:background="#38FFFFFF" />
+
+                <FrameLayout
+                    android:id="@+id/q11_ak_mic"
+                    android:layout_width="54dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/q11_ak_mic_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/q11_ic_mic" />
+                </FrameLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

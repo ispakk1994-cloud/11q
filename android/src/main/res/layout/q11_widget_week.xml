@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 0.7.0 위젯 5 · 한 주(시안 WidgetMoreGalaxy 4×2 · 늘이면 줄이 더 보임) · 색 · 글자는 코드에서(앱 테마 토큰 · 글자 크기 설정) -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/q11_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/q11_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/q11_bg_glass"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="6dp">
+
+        <!-- 머리: 왼쪽(11Q · 한 주 · 고른 날) = 앱의 한 주 · 오른쪽 ＋ = 고른 날 마감으로 작은 창 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/q11_wk_open"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="2dp">
+
+                <TextView
+                    android:id="@+id/q11_logo"
+                    android:layout_width="26dp"
+                    android:layout_height="22dp"
+                    android:background="@drawable/q11_round_white"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="@string/q11_widget_title"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/q11_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:text="@string/q11_week_label"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/q11_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:textColor="#9EFFFFFF"
+                    android:textSize="13.5sp" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/q11_wk_add_area"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="12dp"
+                android:paddingEnd="2dp">
+
+                <FrameLayout
+                    android:id="@+id/q11_wk_add_o"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical">
+
+                    <FrameLayout
+                        android:id="@+id/q11_wk_add_i"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/q11_f_pill">
+
+                        <ImageView
+                            android:id="@+id/q11_wk_add_icon"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/q11_ic_plus" />
+                    </FrameLayout>
+                </FrameLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- 띠: 오늘부터 7일 -->
+        <LinearLayout
+            android:id="@+id/q11_wk_strip"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/q11_d0_o"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="3dp">
+
+            <FrameLayout
+                android:id="@+id/q11_d0_i"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                    android:background="@drawable/q11_f_r12">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/q11_d0_wd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="오늘"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d0_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="18"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d0_dots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.25"
+                        android:maxLines="1"
+                        android:textSize="6sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/q11_d0_dia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:importantForAccessibility="no"
+                    android:includeFontPadding="false"
+                    android:text="◆"
+                    android:textColor="#FF2ECC9A"
+                    android:textSize="8sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/q11_d1_o"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="3dp">
+
+            <FrameLayout
+                android:id="@+id/q11_d1_i"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/q11_d1_wd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="목"
+                        android:textColor="#9EFFFFFF"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d1_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="19"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d1_dots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.25"
+                        android:maxLines="1"
+                        android:textSize="6sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/q11_d1_dia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:importantForAccessibility="no"
+                    android:includeFontPadding="false"
+                    android:text="◆"
+                    android:textColor="#FF2ECC9A"
+                    android:textSize="8sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/q11_d2_o"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="3dp">
+
+            <FrameLayout
+                android:id="@+id/q11_d2_i"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/q11_d2_wd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="금"
+                        android:textColor="#9EFFFFFF"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d2_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="20"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d2_dots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.25"
+                        android:maxLines="1"
+                        android:textSize="6sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/q11_d2_dia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:importantForAccessibility="no"
+                    android:includeFontPadding="false"
+                    android:text="◆"
+                    android:textColor="#FF2ECC9A"
+                    android:textSize="8sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/q11_d3_o"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="3dp">
+
+            <FrameLayout
+                android:id="@+id/q11_d3_i"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/q11_d3_wd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="토"
+                        android:textColor="#9EFFFFFF"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d3_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="21"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d3_dots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.25"
+                        android:maxLines="1"
+                        android:textSize="6sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/q11_d3_dia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:importantForAccessibility="no"
+                    android:includeFontPadding="false"
+                    android:text="◆"
+                    android:textColor="#FF2ECC9A"
+                    android:textSize="8sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/q11_d4_o"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="3dp">
+
+            <FrameLayout
+                android:id="@+id/q11_d4_i"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/q11_d4_wd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="일"
+                        android:textColor="#9EFFFFFF"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d4_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="22"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d4_dots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.25"
+                        android:maxLines="1"
+                        android:textSize="6sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/q11_d4_dia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:importantForAccessibility="no"
+                    android:includeFontPadding="false"
+                    android:text="◆"
+                    android:textColor="#FF2ECC9A"
+                    android:textSize="8sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/q11_d5_o"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="3dp">
+
+            <FrameLayout
+                android:id="@+id/q11_d5_i"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/q11_d5_wd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="월"
+                        android:textColor="#9EFFFFFF"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d5_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="23"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d5_dots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.25"
+                        android:maxLines="1"
+                        android:textSize="6sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/q11_d5_dia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:importantForAccessibility="no"
+                    android:includeFontPadding="false"
+                    android:text="◆"
+                    android:textColor="#FF2ECC9A"
+                    android:textSize="8sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/q11_d6_o"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/q11_d6_i"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/q11_d6_wd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="화"
+                        android:textColor="#9EFFFFFF"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d6_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="24"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/q11_d6_dots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.25"
+                        android:maxLines="1"
+                        android:textSize="6sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/q11_d6_dia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:importantForAccessibility="no"
+                    android:includeFontPadding="false"
+                    android:text="◆"
+                    android:textColor="#FF2ECC9A"
+                    android:textSize="8sp"
+                    android:visibility="visible" />
+            </FrameLayout>
+        </FrameLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1">
+
+            <ListView
+                android:id="@+id/q11_wk_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/q11_wk_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/q11_week_open_app"
+                android:textColor="#9EFFFFFF"
+                android:textSize="14sp" />
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

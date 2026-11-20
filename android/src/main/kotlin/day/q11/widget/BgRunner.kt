@@ -171,7 +171,7 @@ internal object BgRunner {
             t.done(result)
         } catch (e: Exception) {
         }
-        appContext?.let { TodayWidgetProvider.refreshAll(it) }
+        appContext?.let { Q11Widgets.refreshAll(it) }
         pump()
     }
 

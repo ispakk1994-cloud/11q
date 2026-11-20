@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 0.7.0 위젯 3 · 자료에 묻기(시안 4×1 · 가로로만 크기 조절) -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/q11_ask_desc"
+    android:initialLayout="@layout/q11_widget_ask"
+    android:minWidth="250dp"
+    android:minHeight="40dp"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="40dp"
+    android:previewLayout="@layout/q11_widget_ask_preview"
+    android:resizeMode="horizontal"
+    android:targetCellWidth="4"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />

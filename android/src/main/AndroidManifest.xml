@@ -27,6 +27,50 @@
                 android:resource="@xml/q11_widget_today_info" />
         </receiver>
 
+        <!-- 0.7.0 위젯 5 · 한 주(오늘부터 7일 · 날 고르기 · 그날 목록) -->
+        <receiver
+            android:name="day.q11.widget.WeekWidgetProvider"
+            android:exported="false"
+            android:label="@string/q11_week_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/q11_widget_week_info" />
+        </receiver>
+
+        <service
+            android:name="day.q11.widget.WeekListService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <!-- 0.7.0 위젯 1 · 바로 적기(적기 · 말로 = 작은 창 · 사진 = 11Q 카메라) -->
+        <receiver
+            android:name="day.q11.widget.QuickWidgetProvider"
+            android:exported="false"
+            android:label="@string/q11_quick_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/q11_widget_quick_info" />
+        </receiver>
+
+        <!-- 0.7.0 위젯 3 · 자료에 묻기(11Q 대화 · 입력칸 커서 / 말로 묻기) -->
+        <receiver
+            android:name="day.q11.widget.AskWidgetProvider"
+            android:exported="false"
+            android:label="@string/q11_ask_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/q11_widget_ask_info" />
+        </receiver>
+
         <!-- 위젯 목록 줄 -->
         <service
             android:name="day.q11.widget.TodayListService"

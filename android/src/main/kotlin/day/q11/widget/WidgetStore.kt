@@ -102,6 +102,7 @@ internal object WidgetStore {
         prefs(context).edit().putString(KEY_PENDING, keep.toString()).apply()
     }
 
+    /** 0.7.0: 한 주 위젯에만 보이는 일(다른 날)도 체크 표시를 지키게 week.days[].rows까지. */
     private fun rowIds(feed: JSONObject): Set<String> {
         val out = HashSet<String>()
         val rows = feed.optJSONArray("rows") ?: JSONArray()
@@ -110,7 +111,29 @@ internal object WidgetStore {
             val id = r.optString("id", "")
             if (id.isNotEmpty()) out.add(id)
         }
+        val days = feed.optJSONObject("week")?.optJSONArray("days") ?: JSONArray()
+        for (d in 0 until days.length()) {
+            val dr = days.optJSONObject(d)?.optJSONArray("rows") ?: continue
+            for (i in 0 until dr.length()) {
+                val id = dr.optJSONObject(i)?.optString("id", "") ?: ""
+                if (id.isNotEmpty()) out.add(id)
+            }
+        }
         return out
+    }
+
+    // ── 0.7.0 한 주 위젯: 위젯마다 고른 날(날짜 열쇠 2026-11-19 · 날이 바뀌어 없으면 오늘) ──
+
+    private fun selKey(widgetId: Int) = "week_sel_$widgetId"
+
+    fun weekSel(context: Context, widgetId: Int): String = prefs(context).getString(selKey(widgetId), "") ?: ""
+
+    fun setWeekSel(context: Context, widgetId: Int, key: String) {
+        prefs(context).edit().putString(selKey(widgetId), key).apply()
+    }
+
+    fun clearWeekSel(context: Context, widgetId: Int) {
+        prefs(context).edit().remove(selKey(widgetId)).apply()
     }
 }
 
@@ -130,6 +153,11 @@ internal class WidgetTheme(o: JSONObject?) {
     val doneTitle: Int = color(o, "doneTitle", 0x80FFFFFF)
     val tagRadius: Float = num(o, "tag", 6.0)
     val chkRadius: Float = num(o, "chk", 7.0)
+    /** 0.7.0 한 주: ◆ 프로젝트 마감 projHex · 제목 projInkHex · 단계 칩 stepChipFillHex · stepChipInkHex(옛 앱은 안 넘김 → 유리 값) */
+    val proj: Int = color(o, "proj", 0xFF2ECC9A)
+    val projInk: Int = color(o, "projInk", 0xFF7EE0C3)
+    val step: Int = color(o, "step", 0x386C5AFF)
+    val stepInk: Int = color(o, "stepInk", 0xFFD6D0FF)
 
     // ── 작은 창(0.2.0 · 위젯 ＋적기) · 앱의 확인 창 · 입력칸 · 보조 버튼 · 토스트와 같은 토큰 ──
     /** 창 바탕 dlgFillHex · 테두리 cardBorderHex × borderWidth · 모서리 dlgRadius */
@@ -205,4 +233,7 @@ internal object WidgetSize {
     val TITLE = floatArrayOf(17f, 18f, 19.5f)
     val COUNT = floatArrayOf(13.5f, 14.5f, 15.5f)
     val EMPTY = floatArrayOf(14f, 15f, 16f)
+    /** 줄 제목 · 오른쪽 날짜(q11_widget_row · _l · _xl과 같은 값) — 0.7.0 ◆ 프로젝트 줄 */
+    val ROW_TITLE = floatArrayOf(15f, 17f, 19f)
+    val ROW_META = floatArrayOf(12.5f, 14f, 15.5f)
 }

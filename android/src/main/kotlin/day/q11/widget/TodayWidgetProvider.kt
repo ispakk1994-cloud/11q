@@ -51,41 +51,17 @@ class TodayWidgetProvider : AppWidgetProvider() {
     }
 
     override fun onDisabled(context: Context) {
-        WidgetJobs.cancelPeriodic(context)
+        // 0.7.0: 한 주 위젯이 남아 있으면 15분 확인은 그대로
+        if (!Q11Widgets.needsPeriodic(context)) WidgetJobs.cancelPeriodic(context)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == ACTION_ITEM) {
-            handleItem(context, intent)
+            // 체크칸 = 끝냄/되돌림(한 주 위젯 줄도 같이 다시) · 줄 = 앱 열기
+            Q11Widgets.handleItem(context, intent, null)
             return
         }
         super.onReceive(context, intent)
-    }
-
-    private fun handleItem(context: Context, intent: Intent) {
-        val kind = intent.getStringExtra(EXTRA_KIND) ?: return
-        val id = intent.getStringExtra(EXTRA_ID) ?: ""
-        when (kind) {
-            "check" -> {
-                if (id.isEmpty()) return
-                val wasDone = WidgetStore.isPendingDone(context, id)
-                if (wasDone) {
-                    WidgetStore.setPending(context, id, null)
-                    WidgetJobs.runNow(context, "undo", id)
-                } else {
-                    WidgetStore.setPending(context, id, true)
-                    WidgetJobs.runNow(context, "done", id)
-                }
-                refreshList(context)
-            }
-            "open" -> {
-                try {
-                    openAppIntent(context, null)?.let { context.startActivity(it) }
-                } catch (e: Exception) {
-                    // 백그라운드에서 화면 열기가 막힌 기기: 아무 일도 하지 않음(머리 · ＋는 따로 열림)
-                }
-            }
-        }
     }
 
     companion object {
@@ -254,9 +230,21 @@ class TodayWidgetProvider : AppWidgetProvider() {
             )
         }
 
-        private fun openApp(context: Context, action: String?): PendingIntent? {
+        /**
+         * 앱 열기. action = 앱 WidgetCatch가 받을 값(null = 홈 화면 아이콘과 같게).
+         * 0.7.0: 'week'(한 주 보기) · 'ask' · 'askVoice'(대화) · 'camera'도 · 값마다 요청 번호를 따로(서로 덮지 않게).
+         */
+        internal fun openApp(context: Context, action: String?): PendingIntent? {
             val launch = openAppIntent(context, action) ?: return null
-            val code = if (action == null) 10 else 11
+            val code = when (action) {
+                null -> 10
+                "add" -> 11
+                "camera" -> 13
+                "week" -> 14
+                "ask" -> 15
+                "askVoice" -> 16
+                else -> 11
+            }
             return PendingIntent.getActivity(
                 context,
                 code,

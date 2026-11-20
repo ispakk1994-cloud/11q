@@ -68,7 +68,13 @@ class QuickAddActivity : Activity() {
     private lateinit var undo: TextView
     private var openAction: String? = null
 
+    // 0.7.0 한 주 위젯 ＋: 고른 날(예 `11/20`) · 창 제목 · 안내 — 비면 예전과 같음
+    private var dayHint = ""
+    private var dayTitle = ""
+    private var dayHelp = ""
+
     private val autoClose = Runnable { close() }
+    private val autoListen = Runnable { if (phase == 0 && signedIn && !micOpen) listen() }
     private val dots = object : Runnable {
         override fun run() {
             if (phase != 1) return
@@ -98,15 +104,35 @@ class QuickAddActivity : Activity() {
 
         bind()
         paint()
+        readDay(intent)
         texts()
         insets()
         if (signedIn) {
             BgRunner.hold(this)
             held = true
             input.requestFocus()
+            // 0.7.0 바로 적기 위젯 `말로`: 창이 뜨자마자 폰의 음성 입력
+            if (wantsListen(intent)) main.postDelayed(autoListen, 300L)
         } else {
             needSignIn()
         }
+    }
+
+    private fun wantsListen(i: Intent?): Boolean = i?.getBooleanExtra(EXTRA_LISTEN, false) == true
+
+    /** 한 주 위젯 ＋로 열렸으면 그날(아니면 비움 = 예전과 같음). */
+    private fun readDay(i: Intent?) {
+        dayHint = i?.getStringExtra(EXTRA_DAY_HINT).orEmpty().trim()
+        dayTitle = if (dayHint.isEmpty()) "" else i?.getStringExtra(EXTRA_DAY_TITLE).orEmpty()
+        dayHelp = if (dayHint.isEmpty()) "" else i?.getStringExtra(EXTRA_DAY_HELP).orEmpty()
+    }
+
+    private fun helpText(): String = dayHelp.ifEmpty { t("help") }
+
+    /** 날짜 말이 없으면 고른 날을 덧붙여 보냄(AI가 그날 마감으로 정리 · 말한 날짜가 있으면 그대로). */
+    private fun withDay(text: String): String {
+        if (dayHint.isEmpty() || DATE_WORDS.containsMatchIn(text)) return text
+        return "$text $dayHint"
     }
 
     // ── 그리기 ─────────────────────────────────────────
@@ -160,7 +186,7 @@ class QuickAddActivity : Activity() {
     }
 
     private fun texts() {
-        findViewById<TextView>(R.id.q11_qa_title).text = t("title")
+        findViewById<TextView>(R.id.q11_qa_title).text = dayTitle.ifEmpty { t("title") }
         findViewById<View>(R.id.q11_qa_close).contentDescription = t("close")
         mic.contentDescription = t("mic")
         camera.contentDescription = t("camera")
@@ -169,7 +195,7 @@ class QuickAddActivity : Activity() {
         hint.setSpan(AbsoluteSizeSpan(14, true), 0, hint.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         input.hint = hint
         send.text = t("send")
-        help.text = t("help")
+        help.text = helpText()
         undo.text = t("undo")
 
         // 여러 줄로 보이되 키보드에는 `보내기` 단추(엔터 = 넣기)
@@ -267,7 +293,7 @@ class QuickAddActivity : Activity() {
         dot = 0
         main.removeCallbacks(dots)
         main.post(dots)
-        BgRunner.run(this, "add", text) { res -> onAdded(res) }
+        BgRunner.run(this, "add", withDay(text)) { res -> onAdded(res) }
     }
 
     private fun onAdded(res: String?) {
@@ -333,7 +359,7 @@ class QuickAddActivity : Activity() {
     private fun clearError() {
         if (!showingError) return
         showingError = false
-        help.text = t("help")
+        help.text = helpText()
         help.setTextColor(th.meta)
         openBtn.visibility = View.GONE
     }
@@ -475,6 +501,14 @@ class QuickAddActivity : Activity() {
         super.onNewIntent(intent)
         if (!::th.isInitialized) return
         if (phase >= 2) reset() else showIme()
+        // 0.7.0: 다른 위젯 단추로 다시 열렸으면 그 날 · 말로를 새로
+        readDay(intent)
+        findViewById<TextView>(R.id.q11_qa_title).text = dayTitle.ifEmpty { t("title") }
+        if (!showingError) help.text = helpText()
+        if (signedIn && wantsListen(intent)) {
+            main.removeCallbacks(autoListen)
+            main.postDelayed(autoListen, 300L)
+        }
     }
 
     override fun onStop() {
@@ -497,6 +531,24 @@ class QuickAddActivity : Activity() {
     companion object {
         private const val REQ_MIC = 7101
         private const val TOAST_MS = 5_000L
+
+        // 0.7.0 위젯 단추마다 다른 action(PendingIntent가 서로 덮지 않게) · extra
+        const val ACTION_QUICK = "day.q11.widget.QUICK"
+        const val ACTION_LISTEN = "day.q11.widget.QUICK_LISTEN"
+        const val ACTION_DAY_ADD = "day.q11.widget.DAY_ADD"
+        const val EXTRA_LISTEN = "q11_listen"
+        const val EXTRA_DAY_HINT = "q11_day_hint"
+        const val EXTRA_DAY_TITLE = "q11_day_title"
+        const val EXTRA_DAY_HELP = "q11_day_help"
+
+        /** 이 말이 있으면 고른 날을 덧붙이지 않음(사람이 말한 날짜가 먼저) */
+        private val DATE_WORDS = Regex(
+            "(오늘|내일|모레|글피|어제|이번\\s*주|다음\\s*주|다다음\\s*주|주말|다음\\s*달|이번\\s*달|" +
+                "[월화수목금토일]요일|\\d{1,2}\\s*[/.]\\s*\\d{1,2}|\\d{1,2}\\s*월\\s*\\d{1,2}\\s*일|\\d{1,2}\\s*일\\s*(에|까지|날|부터)|" +
+                "today|tonight|tomorrow|yesterday|weekend|next\\s+week|this\\s+week|next\\s+month|" +
+                "\\b(mon|tue|wed|thu|fri|sat|sun)[a-z]*\\b)",
+            RegexOption.IGNORE_CASE
+        )
 
         private val KO = mapOf(
             "title" to "할 일 적기",

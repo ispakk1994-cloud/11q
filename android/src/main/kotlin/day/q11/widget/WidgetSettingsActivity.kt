@@ -85,7 +85,7 @@ class WidgetSettingsActivity : Activity() {
         if (i == level) return
         level = i
         WidgetStore.setSizeLevel(this, i)
-        TodayWidgetProvider.refreshAll(this)
+        Q11Widgets.refreshAll(this)
         paintSegs()
         fillPreview()
     }

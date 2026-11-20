@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 0.7.0 한 주 위젯 · 프로젝트 마감 날 맨 위 ◆ 줄(시안: ◆ 국감 대응 자료 마감 · 단계 2/4) · 누르면 앱의 한 주 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/q11_p_row"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="34dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/q11_p_dia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="5dp"
+            android:importantForAccessibility="no"
+            android:includeFontPadding="false"
+            android:text="◆"
+            android:textColor="#FF2ECC9A"
+            android:textSize="12.5sp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/q11_p_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="#FF7EE0C3"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/q11_p_meta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="#9EFFFFFF"
+        android:textSize="12.5sp" />
+</LinearLayout>

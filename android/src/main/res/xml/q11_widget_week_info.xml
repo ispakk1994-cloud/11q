@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 0.7.0 위젯 5 · 한 주(시안 WidgetMoreGalaxy 4×2 · 크기 조절 · 늘이면 줄이 더 보임)
+     위젯을 꾹 눌러 `설정` = 글자 크기(오늘 할 일 위젯과 같은 값) · 놓을 때는 묻지 않음(안드로이드 12 이상) -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="day.q11.widget.WidgetSettingsActivity"
+    android:description="@string/q11_week_desc"
+    android:initialLayout="@layout/q11_widget_week"
+    android:minWidth="250dp"
+    android:minHeight="110dp"
+    android:minResizeWidth="250dp"
+    android:minResizeHeight="110dp"
+    android:previewLayout="@layout/q11_widget_week_preview"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="4"
+    android:targetCellHeight="2"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable|configuration_optional" />

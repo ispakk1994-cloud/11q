@@ -87,6 +87,24 @@
             android:textSize="17sp"
             android:textStyle="bold" />
 
+        <!-- 0.7.0 한 주 위젯: 프로젝트 단계 칩(국감 대응 자료 · 3/4) · 오늘 할 일 위젯은 안 씀 -->
+        <TextView
+            android:id="@+id/q11_step"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/q11_round_white"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxWidth="150dp"
+            android:maxLines="1"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/q11_meta"
             android:layout_width="wrap_content"

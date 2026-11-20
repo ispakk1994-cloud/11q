@@ -38,8 +38,9 @@ class OneoneQWidgetPlugin :
         try {
             when (call.method) {
                 "ping" -> result.success("ok")
-                "count" -> result.success(TodayWidgetProvider.widgetIds(context).size)
-                "refresh" -> result.success(TodayWidgetProvider.refreshAll(context))
+                // 0.7.0: 놓인 11Q 위젯 넷(오늘 할 일 · 한 주 · 바로 적기 · 자료에 묻기) 모두
+                "count" -> result.success(Q11Widgets.count(context))
+                "refresh" -> result.success(Q11Widgets.refreshAll(context))
                 "requestPin" -> result.success(requestPin())
                 // 0.4.0 앱 설정 `홈 화면 위젯` 줄: 바로 놓기가 되는 런처인지 · 글자 크기 읽기/바꾸기(위젯 `설정`과 같은 값)
                 "pinSupported" -> result.success(pinSupported())
@@ -47,19 +48,19 @@ class OneoneQWidgetPlugin :
                 "setSize" -> {
                     val level = (call.argument<Any>("level") as? Number)?.toInt() ?: 1
                     WidgetStore.setSizeLevel(context, level)
-                    TodayWidgetProvider.refreshAll(context)
+                    Q11Widgets.refreshAll(context)
                     result.success(WidgetStore.sizeLevel(context))
                 }
                 "save" -> {
                     val json = call.argument<String>("json") ?: ""
                     if (json.isNotBlank()) WidgetStore.saveFeed(context, json)
-                    TodayWidgetProvider.refreshAll(context)
-                    if (TodayWidgetProvider.widgetIds(context).isNotEmpty()) WidgetJobs.schedulePeriodic(context)
+                    Q11Widgets.refreshAll(context)
+                    if (Q11Widgets.needsPeriodic(context)) WidgetJobs.schedulePeriodic(context)
                     result.success(true)
                 }
                 "clear" -> {
                     WidgetStore.clearFeed(context, call.argument<String>("json"))
-                    TodayWidgetProvider.refreshAll(context)
+                    Q11Widgets.refreshAll(context)
                     result.success(true)
                 }
                 "lastFeed" -> result.success(WidgetStore.feedRaw(context))
@@ -67,7 +68,7 @@ class OneoneQWidgetPlugin :
                     val d = (call.argument<Any>("dispatcher") as? Number)?.toLong() ?: 0L
                     val c = (call.argument<Any>("callback") as? Number)?.toLong() ?: 0L
                     if (d != 0L && c != 0L) WidgetStore.saveHandles(context, d, c)
-                    if (TodayWidgetProvider.widgetIds(context).isNotEmpty()) WidgetJobs.schedulePeriodic(context)
+                    if (Q11Widgets.needsPeriodic(context)) WidgetJobs.schedulePeriodic(context)
                     result.success(d != 0L && c != 0L)
                 }
                 "takeAction" -> {

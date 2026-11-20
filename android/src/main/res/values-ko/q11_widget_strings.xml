@@ -12,4 +12,27 @@
     <string name="q11_widget_pv_2">팀 회식 장소 예약</string>
     <string name="q11_widget_pv_3">회의록 정리</string>
     <string name="q11_widget_add_short">적기</string>
+    <!-- 0.7.0 한 주 · 바로 적기 · 자료에 묻기 -->
+    <string name="q11_week_label">한 주</string>
+    <string name="q11_week_desc">오늘부터 7일 · 날을 누르면 그날 할 일</string>
+    <string name="q11_week_open_app">11Q를 한 번 열면 한 주가 보여요</string>
+    <string name="q11_week_pv_w0">오늘</string>
+    <string name="q11_week_pv_w1">목</string>
+    <string name="q11_week_pv_w2">금</string>
+    <string name="q11_week_pv_w3">토</string>
+    <string name="q11_week_pv_w4">일</string>
+    <string name="q11_week_pv_w5">월</string>
+    <string name="q11_week_pv_w6">화</string>
+    <string name="q11_week_pv_head">오늘 · 4개 남음</string>
+    <string name="q11_week_pv_urgent">긴급</string>
+    <string name="q11_week_pv_2">법인카드 정산</string>
+    <string name="q11_week_pv_2m">어제</string>
+    <string name="q11_quick_label">바로 적기</string>
+    <string name="q11_quick_desc">앱을 안 열고 적기 · 말로 · 사진</string>
+    <string name="q11_quick_voice">말로</string>
+    <string name="q11_quick_photo">사진</string>
+    <string name="q11_quick_foot">적기 · 말로는 앱이 안 열려요</string>
+    <string name="q11_ask_label">자료에 묻기</string>
+    <string name="q11_ask_desc">내 자료에 바로 물어보기 · 11Q 대화로</string>
+    <string name="q11_ask_hint">내 자료에 물어보기…</string>
 </resources>
