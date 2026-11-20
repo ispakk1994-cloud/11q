@@ -3,9 +3,13 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- 작은 창 `말로 적기`: 폰의 음성 입력 창이 있는지 보려면(안드로이드 11 이상) -->
+    <!-- 0.3.1: 앱 대화 탭 `말로 적기`(speech_to_text)가 폰의 받아쓰기 서비스를 찾게(안드로이드 11 이상 · 앱 매니페스트로 합쳐짐) -->
     <queries>
         <intent>
             <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+        </intent>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
         </intent>
     </queries>
 
