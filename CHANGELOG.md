@@ -1,3 +1,8 @@
+## 0.6.1 · 안드로이드 받아쓰기 서비스 찾기
+
+- 안드로이드 매니페스트 `queries`에 `android.speech.RecognitionService` 더함(앱 매니페스트로 합쳐짐) — 안드로이드 11 이상에서 앱의 `말로 적기`(speech_to_text)가 폰의 받아쓰기 서비스를 볼 수 있게(`isRecognitionAvailable`).
+- 그 밖은 0.6.0과 같음(위젯 · 작은 창 · 설정 창 · 아이폰 통로).
+
 ## 0.6.0 · 아이폰 체크로 끝내기 · 바로 적기 · 뒤에서 확인
 
 - 화면 없는 엔진(Q11BgRunner): 앱이 `setHandles`로 넘긴 함수 번호로 새 FlutterEngine에서 앱 코드(q11WidgetDispatch → q11WidgetBg)를 돌림(갤럭시 BgRunner와 같은 통로 `oneone_q_widget/bg` · ready → run) · 플러그인은 앱 코드가 쓰는 것만 붙임(Firebase core · auth · Firestore · 로컬 알림 · shared_preferences · 이 플러그인) · 5초 쉬면 닫음.
