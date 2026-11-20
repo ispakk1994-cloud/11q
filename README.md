@@ -16,10 +16,10 @@ App Settings › Project Dependencies › Custom Pub Dependencies › Add Pub De
 oneone_q_widget:
   git:
     url: https://github.com/ispakk1994-cloud/11q.git
-    ref: 52eee6febe3065fb9beea3b25bdbeef2152a3eab
+    ref: 3f59af05a6e654cbaf873bec2599024dcb5f9296
 ```
 
-FlutterFlow 코드 편집기는 의존성을 처음 받은 판으로 기억해요(`ref`가 없으면 새 판을 올려도 편집기는 옛 판으로 검사해 "isn't defined" 오류). 그래서 늘 `ref: <커밋 번호>`로 묶고, 새 판이 나오면 이 번호만 바꿔요. 판 번호: 0.1.0 = `1bf95df` · 0.1.1 = `51b9d33` · 0.2.0 = `4ab24b7` · 0.3.0 = `45f42aa` · 0.4.0 = `0dcbb4b` · 0.5.0 = `d3a07c9`(아이폰 통로) · 0.6.0 = `52eee6f`(아이폰 체크 · 바로 적기 · 뒤에서 확인).
+FlutterFlow 코드 편집기는 의존성을 처음 받은 판으로 기억해요(`ref`가 없으면 새 판을 올려도 편집기는 옛 판으로 검사해 "isn't defined" 오류). 그래서 늘 `ref: <커밋 번호>`로 묶고, 새 판이 나오면 이 번호만 바꿔요. 판 번호: 0.1.0 = `1bf95df` · 0.1.1 = `51b9d33` · 0.2.0 = `4ab24b7` · 0.3.0 = `45f42aa` · 0.4.0 = `0dcbb4b` · 0.5.0 = `d3a07c9`(아이폰 통로) · 0.6.0 = `52eee6f`(아이폰 체크 · 바로 적기 · 뒤에서 확인) · 0.6.1 = `3f59af0`(안드로이드 받아쓰기 서비스 찾기).
 
 ## Dart
 
