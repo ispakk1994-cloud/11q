@@ -1,3 +1,11 @@
+## 0.5.0 · 아이폰 통로
+
+- 아이폰에도 같은 통로(MethodChannel `oneone_q_widget`): `save` · `clear` · `lastFeed`는 목록(JSON)을 앱 그룹 저장소(`group.com.sj1029.QUEST11` · 열쇠 `q11.feed`)에 두고 위젯을 다시 그림(`WidgetCenter`) · `count`는 놓인 위젯 수.
+- 위젯 ＋ → 주소 `oneoneq://widget/add`로 앱이 열리면 여기서 받아 `takeAction`(그리고 `action`)으로 'add'를 넘김 · Flutter 길 찾기로는 안 감(그 밖의 `oneoneq://` 주소는 그대로).
+- 아이폰은 앱에서 바로 놓기가 없어 `pinSupported` · `requestPin`은 false · 글자 크기는 위젯을 꾹 눌러 `위젯 편집`에서 위젯마다 고름(`sizeLevel`은 위젯이 마지막에 그린 값 · `setSize`는 바꾸지 않음) · `setHandles`는 false(앱 화면 없이 Dart를 돌리지 않음).
+- 위젯 화면(SwiftUI 확장)은 앱 저장소에서 따로 붙임 · 이 플러그인엔 통로만.
+- 안드로이드는 0.4.0과 같음.
+
 ## 0.4.0 · 앱 설정 `홈 화면 위젯` 줄
 
 - 통로(MethodChannel `oneone_q_widget`)에 셋 더함: `pinSupported`(이 런처가 앱에서 바로 놓기를 받는지) · `sizeLevel`(위젯 글자 크기 0 · 1 · 2) · `setSize`(글자 크기 바꾸고 놓인 위젯 모두 다시 그림 · 위젯 `설정`과 같은 값).
