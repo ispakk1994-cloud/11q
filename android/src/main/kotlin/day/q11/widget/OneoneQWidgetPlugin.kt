@@ -41,6 +41,15 @@ class OneoneQWidgetPlugin :
                 "count" -> result.success(TodayWidgetProvider.widgetIds(context).size)
                 "refresh" -> result.success(TodayWidgetProvider.refreshAll(context))
                 "requestPin" -> result.success(requestPin())
+                // 0.4.0 앱 설정 `홈 화면 위젯` 줄: 바로 놓기가 되는 런처인지 · 글자 크기 읽기/바꾸기(위젯 `설정`과 같은 값)
+                "pinSupported" -> result.success(pinSupported())
+                "sizeLevel" -> result.success(WidgetStore.sizeLevel(context))
+                "setSize" -> {
+                    val level = (call.argument<Any>("level") as? Number)?.toInt() ?: 1
+                    WidgetStore.setSizeLevel(context, level)
+                    TodayWidgetProvider.refreshAll(context)
+                    result.success(WidgetStore.sizeLevel(context))
+                }
                 "save" -> {
                     val json = call.argument<String>("json") ?: ""
                     if (json.isNotBlank()) WidgetStore.saveFeed(context, json)
@@ -71,6 +80,11 @@ class OneoneQWidgetPlugin :
         } catch (e: Exception) {
             result.error("q11_widget", e.message, null)
         }
+    }
+
+    private fun pinSupported(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return false
+        return AppWidgetManager.getInstance(context).isRequestPinAppWidgetSupported
     }
 
     private fun requestPin(): Boolean {
