@@ -187,6 +187,20 @@ public class OneoneQWidgetPlugin: NSObject, FlutterPlugin {
         Task { await Q11Notify.cleanup() }
     }
 
+    /// 앱이 앞에 있을 때도 바로 적기 결과 알림을 띄움(우리 알림만 · 다른 알림은 그 플러그인이)
+    public func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        guard (notification.request.content.userInfo["q11"] as? String) == "quick" else { return }
+        if #available(iOS 14.0, *) {
+            completionHandler([.banner, .list])
+        } else {
+            completionHandler([.alert])
+        }
+    }
+
     /// 바로 적기 알림의 `되돌리기` · `앱에서 보기`(우리 알림만 · 다른 알림은 그 플러그인이)
     public func userNotificationCenter(
         _ center: UNUserNotificationCenter,

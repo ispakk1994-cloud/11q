@@ -169,27 +169,30 @@ enum Q11Plugins {
     static func register(on engine: FlutterEngine) {
         registeringBackground = true
         defer { registeringBackground = false }
-        if let r = engine.registrar(forPlugin: "OneoneQWidgetPlugin") {
-            OneoneQWidgetPlugin.register(with: r)
-        }
         let sel = NSSelectorFromString("registerWithRegistrar:")
-        var core = false
+        var found: [(String, AnyObject)] = []
         for (key, names) in wanted {
-            guard let cls = names.lazy.compactMap({ NSClassFromString($0) }).first else {
+            if let cls = names.lazy.compactMap({ NSClassFromString($0) }).first {
+                found.append((key, cls as AnyObject))
+            } else {
                 NSLog("[11Q] 뒤 엔진: \(key) 없음")
-                continue
             }
-            let obj = cls as AnyObject
-            guard obj.responds(to: sel), let r = engine.registrar(forPlugin: key) else { continue }
-            _ = obj.perform(sel, with: r)
-            if key == "FLTFirebaseCorePlugin" { core = true }
         }
-        if !core {
-            // 이름이 바뀐 판이면 앱 전체 목록으로(이 플러그인은 위에서 이미 붙였지만 두 번 붙어도 통로만 다시 잡음)
-            let all = NSSelectorFromString("registerWithRegistry:")
-            if let reg = NSClassFromString("GeneratedPluginRegistrant") as AnyObject?, reg.responds(to: all) {
-                _ = reg.perform(all, with: engine)
+        if found.contains(where: { $0.0 == "FLTFirebaseCorePlugin" }) {
+            if let r = engine.registrar(forPlugin: "OneoneQWidgetPlugin") {
+                OneoneQWidgetPlugin.register(with: r)
             }
+            for (key, obj) in found where obj.responds(to: sel) {
+                if let r = engine.registrar(forPlugin: key) {
+                    _ = obj.perform(sel, with: r)
+                }
+            }
+            return
+        }
+        // 이름이 바뀐 판이면 앱 전체 목록으로(이 플러그인도 그 안에 있음)
+        let all = NSSelectorFromString("registerWithRegistry:")
+        if let reg = NSClassFromString("GeneratedPluginRegistrant") as AnyObject?, reg.responds(to: all) {
+            _ = reg.perform(all, with: engine)
         }
     }
 }
