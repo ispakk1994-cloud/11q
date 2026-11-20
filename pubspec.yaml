@@ -1,6 +1,6 @@
 name: oneone_q_widget
 description: 11Q home screen widget for Android (Galaxy) and iPhone. No secrets in this package.
-version: 0.5.0
+version: 0.6.0
 publish_to: none
 
 environment:

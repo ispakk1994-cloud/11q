@@ -1,3 +1,11 @@
+## 0.6.0 · 아이폰 체크로 끝내기 · 바로 적기 · 뒤에서 확인
+
+- 화면 없는 엔진(Q11BgRunner): 앱이 `setHandles`로 넘긴 함수 번호로 새 FlutterEngine에서 앱 코드(q11WidgetDispatch → q11WidgetBg)를 돌림(갤럭시 BgRunner와 같은 통로 `oneone_q_widget/bg` · ready → run) · 플러그인은 앱 코드가 쓰는 것만 붙임(Firebase core · auth · Firestore · 로컬 알림 · shared_preferences · 이 플러그인) · 5초 쉬면 닫음.
+- 공개 함수 `OneoneQWidget.toggle(taskId:)`(위젯 체크칸 · 앱의 LiveActivityIntent가 앱 안에서 부름 · 갤럭시처럼 체크 표시 3분) · `quickAdd(text:)`(바로 적기 · 결과는 알림 `11Q · 할 일에 넣었어요` + 되돌리기 · 앱에서 보기).
+- 뒤에서 확인: BGAppRefresh `day.q11.widget.refresh`(앱 Info.plist에 이름이 있을 때만 · 15분 뒤부터 · 언제 할지는 아이폰) → 앱 함수 'refresh'(갤럭시 15분 확인과 같음).
+- 체크 표시(pending)를 앱 그룹 `q11.pending`에(위젯이 읽음) · 목록을 새로 적으면 없어진 일 표시는 지움.
+- 안드로이드는 0.4.0과 같음.
+
 ## 0.5.0 · 아이폰 통로
 
 - 아이폰에도 같은 통로(MethodChannel `oneone_q_widget`): `save` · `clear` · `lastFeed`는 목록(JSON)을 앱 그룹 저장소(`group.com.sj1029.QUEST11` · 열쇠 `q11.feed`)에 두고 위젯을 다시 그림(`WidgetCenter`) · `count`는 놓인 위젯 수.
