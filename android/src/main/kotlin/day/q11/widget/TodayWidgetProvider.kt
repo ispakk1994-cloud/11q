@@ -15,8 +15,9 @@ import android.widget.RemoteViews
 
 /**
  * 11Q 홈 화면 위젯 · 오늘 할 일(위젯 A).
- * - 머리: 11Q · 오늘 · N개 남음 · ＋ 적기(0.3.0 시안 알약 · 누르는 곳 넓게 → 홈 화면 위 작은 창 QuickAddActivity)
- *   앱이 열리는 곳은 왼쪽 11Q · 오늘 · N개 남음만(＋ 옆을 눌러 앱이 열리던 것)
+ * - 머리: 오늘 · N개 남음 · ＋ 적기(알약 · 누르는 곳 넓게 → 홈 화면 위 작은 창 QuickAddActivity)
+ *   앱이 열리는 곳은 왼쪽 오늘 · N개 남음만(＋ 옆을 눌러 앱이 열리던 것)
+ * - 0.8.0 다듬기(시안 WidgetPolish): 로고 없음 · 여백 좌우 16 · 굵기 500 · 온전한 줄만 + `+N개 더`
  * - 글자 크기: 위젯을 꾹 눌러 `설정`(WidgetSettingsActivity) · 보통 · 크게(처음) · 아주 크게
  * - 목록: 앱 대시보드와 같은 순서(긴급 → 지난 일 → 오늘) · 체크칸으로 끝냄 · 지금 칩
  * - 목록은 앱이 save로 넘긴 JSON(WidgetStore)을 그대로 그린다.
@@ -110,25 +111,19 @@ class TodayWidgetProvider : AppWidgetProvider() {
 
             rv.setInt(R.id.q11_card, "setBackgroundResource", th.bgRes)
 
-            // 머리
+            // 머리(0.8.0 다듬기 · 시안 WidgetPolish: 로고 없음 · 굵기 500)
             rv.setTextViewText(R.id.q11_title, text(feed, "title", context.getString(R.string.q11_widget_today)))
             rv.setTextColor(R.id.q11_title, th.ink)
             rv.setTextViewText(R.id.q11_count, text(feed, "count", ""))
             rv.setTextColor(R.id.q11_count, th.meta)
             rv.setTextViewTextSize(R.id.q11_title, TypedValue.COMPLEX_UNIT_SP, WidgetSize.TITLE[level])
             rv.setTextViewTextSize(R.id.q11_count, TypedValue.COMPLEX_UNIT_SP, WidgetSize.COUNT[level])
-            tint(rv, R.id.q11_logo, th.accent, chipShape(th))
-            rv.setTextColor(R.id.q11_logo, th.accentInk)
 
-            // ＋ 적기 알약(시안): 네온은 분홍 선 알약 · 스위스는 네모 · 나머지 알약에 accentHex
-            when {
-                th.mode == "neon" -> rv.setInt(R.id.q11_plus, "setBackgroundResource", R.drawable.q11_pill_neon)
-                th.square -> tint(rv, R.id.q11_plus, th.accent, "square")
-                else -> {
-                    rv.setInt(R.id.q11_plus, "setBackgroundResource", R.drawable.q11_pill_white)
-                    tint(rv, R.id.q11_plus, th.accent, null)
-                }
-            }
+            // ＋ 적기 알약 = 이 위젯의 꽉 찬 강조색 하나: accentHex · 선 accentLineHex(종이 1.5 · 네온 분홍) · 스위스는 네모
+            Q11Box.paint(
+                context, rv, R.id.q11_plus_o, R.id.q11_plus,
+                th.accent, th.accentLine, th.primaryBw, if (th.square) 0f else 999f
+            )
             tintImage(rv, R.id.q11_plus_icon, th.accentInk)
             rv.setTextColor(R.id.q11_plus_text, th.accentInk)
             rv.setTextViewText(R.id.q11_plus_text, if (en) "Add" else "적기")
@@ -148,14 +143,37 @@ class TodayWidgetProvider : AppWidgetProvider() {
             rv.setEmptyView(R.id.q11_list, R.id.q11_empty)
             rv.setPendingIntentTemplate(R.id.q11_list, itemTemplate(context))
 
-            // 누르면: 왼쪽 11Q · 오늘 · 빈 칸 = 앱 · ＋ 적기(알약 둘레 넓게) = 작은 창
+            // 0.8.0 마지막 줄이 잘리지 않게: 온전한 줄만 · 넘치면 `+N개 더`(위로 밀면 그대로 더 보임)
+            rv.setTextColor(R.id.q11_more, th.meta)
+            val avail = Q11Widgets.listAvail(context, widgetId, FIXED_DP)
+            Q11Widgets.applyFit(context, rv, R.id.q11_list_box, R.id.q11_more, fitToday(context, widgetId, feed, level, avail), en, level)
+
+            // 누르면: 왼쪽 오늘 · N개 남음 · 빈 칸 · `+N개 더` = 앱 · ＋ 적기(알약 둘레 넓게) = 작은 창
             //   (앱을 한 번도 안 열었으면 작은 창이 앱 적기 칸을 대신 연다)
             openApp(context, null)?.let {
                 rv.setOnClickPendingIntent(R.id.q11_open, it)
                 rv.setOnClickPendingIntent(R.id.q11_empty, it)
+                rv.setOnClickPendingIntent(R.id.q11_more, it)
             }
             rv.setOnClickPendingIntent(R.id.q11_plus_area, quickAdd(context))
             return rv
+        }
+
+        /** 머리 · 여백(dp): 위 12 + 아래 10 + 머리 36 + 틈 2 + 넉넉히 2 = 목록 칸 밖 높이 */
+        private const val FIXED_DP = 62
+
+        /** 목록 줄 높이(TodayListFactory와 같은 줄 · 4×2는 묶음 머리 없음). */
+        private fun fitToday(context: Context, widgetId: Int, feed: org.json.JSONObject?, level: Int, avail: Int): Pair<Int, Int> {
+            val all = feed?.optJSONArray("rows") ?: return Pair(-1, 0)
+            val compact = isCompact(context, widgetId)
+            val items = ArrayList<Pair<Int, Boolean>>()
+            for (i in 0 until all.length()) {
+                val r = all.optJSONObject(i) ?: continue
+                val head = r.optString("t") == "h"
+                if (head && compact) continue
+                items.add(Pair(if (head) WidgetSize.HEAD_H[level] else WidgetSize.ROW_H[level], !head))
+            }
+            return Q11Widgets.fit(items, avail, WidgetSize.MORE_H)
         }
 
         fun render(context: Context, manager: AppWidgetManager, widgetId: Int) {

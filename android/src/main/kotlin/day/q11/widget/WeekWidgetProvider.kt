@@ -17,7 +17,8 @@ import org.json.JSONObject
 
 /**
  * 0.7.0 위젯 5 · 한 주(시안 WidgetMoreGalaxy · 4×2 · 늘이면 줄이 더 보임).
- * - 머리: 11Q · 한 주 · 고른 날 `목 11/19 · 3개 남음` · ＋(고른 날 마감으로 작은 창)
+ * - 머리: 한 주 · 고른 날 `목 11/19 · 3개 남음` · ＋(고른 날 마감으로 작은 창 · 0.8.0 옅은 강조 바탕)
+ * - 0.8.0 다듬기(시안 WidgetPolish): 로고 없음 · 꽉 찬 강조색은 고른 날 하나 · 일요일 빨강 · 온전한 줄만 + `+N개 더`
  * - 띠: 오늘부터 7일(점 = 남은 일 · 첫 점 빨강 = 긴급 · ◆ = 프로젝트 마감) · 날을 누르면 그날 일(위젯마다 기억)
  * - 목록: 앱이 넘긴 week.days[i].rows(◆ 프로젝트 줄 → 할 일 줄) · 체크칸 = 오늘 위젯과 같은 끝내기
  * - 앱을 한 번도 안 열었거나 옛 앱(7판 전)이면 `11Q를 한 번 열면 한 주가 보여요`
@@ -85,9 +86,9 @@ class WeekWidgetProvider : AppWidgetProvider() {
         private val DOTS = intArrayOf(R.id.q11_d0_dots, R.id.q11_d1_dots, R.id.q11_d2_dots, R.id.q11_d3_dots, R.id.q11_d4_dots, R.id.q11_d5_dots, R.id.q11_d6_dots)
         private val DIA = intArrayOf(R.id.q11_d0_dia, R.id.q11_d1_dia, R.id.q11_d2_dia, R.id.q11_d3_dia, R.id.q11_d4_dia, R.id.q11_d5_dia, R.id.q11_d6_dia)
 
-        /** 날 칸 글자 크기(보통 · 크게 · 아주 크게) */
-        private val WD_SIZE = floatArrayOf(10.5f, 11.5f, 12.5f)
-        private val DAY_SIZE = floatArrayOf(15.5f, 17f, 18.5f)
+        /** 날 칸 글자 크기(보통 · 크게 · 아주 크게 · 0.8.0 시안 WidgetPolish 크게 = 11 · 16.5) */
+        private val WD_SIZE = floatArrayOf(10.5f, 11f, 12f)
+        private val DAY_SIZE = floatArrayOf(15.5f, 16.5f, 18f)
 
         fun widgetIds(context: Context): IntArray =
             AppWidgetManager.getInstance(context)
@@ -143,16 +144,17 @@ class WeekWidgetProvider : AppWidgetProvider() {
 
             rv.setInt(R.id.q11_card, "setBackgroundResource", th.bgRes)
 
-            // 머리
-            TodayWidgetProvider.tint(rv, R.id.q11_logo, th.accent, TodayWidgetProvider.chipShape(th))
-            rv.setTextColor(R.id.q11_logo, th.accentInk)
+            // 머리(0.8.0 다듬기 · 시안 WidgetPolish: 로고 없음 · 굵기 500)
             rv.setTextViewText(R.id.q11_title, week?.optString("title", "")?.ifEmpty { null } ?: (if (en) "Week" else "한 주"))
             rv.setTextColor(R.id.q11_title, th.ink)
             rv.setTextViewTextSize(R.id.q11_title, TypedValue.COMPLEX_UNIT_SP, WidgetSize.TITLE[level])
             rv.setTextColor(R.id.q11_count, th.meta)
             rv.setTextViewTextSize(R.id.q11_count, TypedValue.COMPLEX_UNIT_SP, WidgetSize.COUNT[level])
-            Q11Box.accent(context, rv, R.id.q11_wk_add_o, R.id.q11_wk_add_i, th, 999f)
-            TodayWidgetProvider.tintImage(rv, R.id.q11_wk_add_icon, th.accentInk)
+            // ＋ = 옅은 강조 바탕 + 강조 글자색(꽉 찬 강조색은 고른 날 하나만) · 네온만 분홍 선
+            Q11Box.paint(context, rv, R.id.q11_wk_add_o, R.id.q11_wk_add_i, th.softAccent, th.innerLine, 1f, th.pillRadius)
+            TodayWidgetProvider.tintImage(rv, R.id.q11_wk_add_icon, th.link)
+            rv.setTextColor(R.id.q11_wk_more, th.meta)
+            rv.setViewVisibility(R.id.q11_wk_more, View.GONE)
             rv.setContentDescription(R.id.q11_wk_add_area, if (en) "Add a task" else "할 일 적기")
             TodayWidgetProvider.openApp(context, "week")?.let { rv.setOnClickPendingIntent(R.id.q11_wk_open, it) }
 
@@ -172,6 +174,7 @@ class WeekWidgetProvider : AppWidgetProvider() {
                 )
                 rv.setOnClickPendingIntent(R.id.q11_wk_add_area, addIntent(context, widgetId, null))
                 TodayWidgetProvider.openApp(context, null)?.let { rv.setOnClickPendingIntent(R.id.q11_wk_empty, it) }
+                Q11Widgets.applyFit(context, rv, R.id.q11_wk_box, R.id.q11_wk_more, Pair(-1, 0), en, level)
                 return rv
             }
 
@@ -190,12 +193,19 @@ class WeekWidgetProvider : AppWidgetProvider() {
                 }
                 rv.setViewVisibility(CELL_O[i], View.VISIBLE)
                 val on = i == sel
-                if (on) Q11Box.accent(context, rv, CELL_O[i], CELL_I[i], th) else Q11Box.clear(context, rv, CELL_O[i], CELL_I[i])
+                // 고른 날 = 이 위젯의 꽉 찬 강조색 하나(0.8.0 · 테두리 없음 · 네온만 분홍 선)
+                if (on) {
+                    Q11Box.paint(context, rv, CELL_O[i], CELL_I[i], th.accent, th.innerLine, 1f, th.ctlRadius)
+                } else {
+                    Q11Box.clear(context, rv, CELL_O[i], CELL_I[i])
+                }
+                // 0.8.0 일요일은 요일 · 날짜를 dangerHex(시안 ⑨ · 고른 날은 강조 글자색 그대로)
+                val sun = !on && isSunday(d.optString("key", ""))
                 rv.setTextViewText(WD[i], d.optString("wd", ""))
-                rv.setTextColor(WD[i], if (on) th.accentInk else if (i == 0) th.ink else th.meta)
+                rv.setTextColor(WD[i], if (on) th.accentInk else if (sun) th.danger else if (i == 0) th.ink else th.meta)
                 rv.setTextViewTextSize(WD[i], TypedValue.COMPLEX_UNIT_SP, WD_SIZE[level])
                 rv.setTextViewText(DAY[i], d.optInt("day", 0).toString())
-                rv.setTextColor(DAY[i], if (on) th.accentInk else th.ink)
+                rv.setTextColor(DAY[i], if (on) th.accentInk else if (sun) th.danger else th.ink)
                 rv.setTextViewTextSize(DAY[i], TypedValue.COMPLEX_UNIT_SP, DAY_SIZE[level])
                 val dotColor = if (on) th.accentInk else WidgetTheme.alpha(th.ink, 0.55f)
                 rv.setTextViewText(DOTS[i], Q11Rows.dots(d.optInt("n", 0), d.optBoolean("urgent", false), dotColor, th.danger))
@@ -216,7 +226,38 @@ class WeekWidgetProvider : AppWidgetProvider() {
             rv.setPendingIntentTemplate(R.id.q11_wk_list, itemTemplate(context))
             rv.setOnClickPendingIntent(R.id.q11_wk_add_area, addIntent(context, widgetId, cur))
             rv.setOnClickPendingIntent(R.id.q11_wk_empty, addIntent(context, widgetId, cur))
+
+            // 0.8.0 마지막 줄이 잘리지 않게: 온전한 줄만 · 넘치면 `+N개 더`(누르면 앱의 한 주 · 위로 밀면 그대로 더 보임)
+            val items = ArrayList<Pair<Int, Boolean>>()
+            val rows = cur.optJSONArray("rows")
+            if (rows != null) {
+                for (k in 0 until rows.length()) {
+                    val r = rows.optJSONObject(k) ?: continue
+                    items.add(Pair(if (r.optString("t") == "p") WidgetSize.PROW_H else WidgetSize.ROW_H[level], true))
+                }
+            }
+            val avail = Q11Widgets.listAvail(context, widgetId, FIXED_DP)
+            val fit = Q11Widgets.fit(items, avail, WidgetSize.MORE_H)
+            Q11Widgets.applyFit(context, rv, R.id.q11_wk_box, R.id.q11_wk_more, fit, en, level)
+            TodayWidgetProvider.openApp(context, "week")?.let { rv.setOnClickPendingIntent(R.id.q11_wk_more, it) }
             return rv
+        }
+
+        /** 머리 · 띠 · 여백(dp): 위 12 + 아래 10 + 머리 34 + 띠 4 + 48 + 틈 4 + 넉넉히 2 = 목록 칸 밖 높이 */
+        private const val FIXED_DP = 114
+
+        /** 날짜 열쇠(2026-11-22)가 일요일인지(안드로이드 7부터 · java.time 없이). */
+        private fun isSunday(key: String): Boolean {
+            val p = key.split("-")
+            if (p.size != 3) return false
+            return try {
+                val c = java.util.Calendar.getInstance()
+                c.clear()
+                c.set(p[0].toInt(), p[1].toInt() - 1, p[2].toInt())
+                c.get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.SUNDAY
+            } catch (e: Exception) {
+                false
+            }
         }
 
         private fun mutableFlag(): Int =

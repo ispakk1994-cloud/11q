@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 묶음 머리(아주 크게 · 긴급 · N / 지난 일 · N / 오늘 · N) — 높은 위젯에서만 -->
+<!-- 묶음 머리(아주 크게 · 긴급 · N / 지난 일 · N / 오늘 · N) — 높은 위젯에서만 · 0.8.0 높이 고정 32(온전한 줄만 보이게 줄 수를 셈) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="32dp"
+    android:gravity="bottom"
     android:orientation="vertical"
-    android:paddingTop="11dp"
-    android:paddingBottom="2dp">
+    android:paddingBottom="3dp">
 
     <TextView
         android:id="@+id/q11_head_text"
@@ -13,6 +13,6 @@
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
         android:maxLines="1"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:fontFamily="sans-serif-medium"
+        android:textSize="16sp" />
 </LinearLayout>

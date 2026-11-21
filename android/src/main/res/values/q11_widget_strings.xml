@@ -29,10 +29,9 @@
     <string name="q11_week_pv_2">Settle the card expenses</string>
     <string name="q11_week_pv_2m">Yesterday</string>
     <string name="q11_quick_label">Quick add</string>
-    <string name="q11_quick_desc">Type, speak or snap a task without opening 11Q</string>
-    <string name="q11_quick_voice">Speak</string>
+    <string name="q11_quick_desc">Type or say a task without opening 11Q · Photo opens the 11Q camera</string>
+    <string name="q11_quick_voice">Voice</string>
     <string name="q11_quick_photo">Photo</string>
-    <string name="q11_quick_foot">Add · Speak keep 11Q closed</string>
     <string name="q11_ask_label">Ask my files</string>
     <string name="q11_ask_desc">Ask about your own files in 11Q Chat</string>
     <string name="q11_ask_hint">Ask my files…</string>

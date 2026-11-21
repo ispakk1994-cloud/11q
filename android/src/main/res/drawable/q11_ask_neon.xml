@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 0.8.0 자료에 묻기 · 검색창 하나(바탕 카드 없이 알약) · neon -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#FF07070C" />
+    <stroke android:width="1dp" android:color="#FF22D3EE" />
+    <corners android:radius="6dp" />
+</shape>

@@ -187,6 +187,34 @@ internal class WidgetTheme(o: JSONObject?) {
 
     val square: Boolean get() = chkRadius <= 1f
 
+    /**
+     * 0.8.0 옅은 강조(한 주 ＋ · 시안 WidgetPolish ⑤ 꽉 찬 강조색은 한 위젯에 하나): accentHex를 옅게 · 그 위 그림은 linkHex.
+     * 네온은 강조색이 이미 옅은 분홍(15%)이라 그대로.
+     */
+    val softAccent: Int
+        get() = when (mode) {
+            "neon" -> accent
+            "glass" -> alpha(accent, 0.26f)
+            else -> alpha(accent, 0.12f)
+        }
+
+    /** 0.8.0 안쪽 선(고른 날 칸 · ＋): 네온만 분홍 선(앱과 같음) · 다른 테마는 선 없음. */
+    val innerLine: Int get() = if (mode == "neon") accentLine else 0
+
+    /** 0.8.0 주 버튼 선 굵기: 테마 굵기(종이 2)보다 얇게 1.5까지(시안 ④ 안쪽 선 얇게). */
+    val primaryBw: Float get() = borderW.coerceAtMost(1.5f)
+
+    /** 0.8.0 자료에 묻기 알약(위젯 바탕과 같은 그림 · 모서리 pillRadius) */
+    val askBgRes: Int
+        get() = when (mode) {
+            "paper" -> R.drawable.q11_ask_paper
+            "neon" -> R.drawable.q11_ask_neon
+            "swiss" -> R.drawable.q11_ask_swiss
+            "diary" -> R.drawable.q11_ask_diary
+            "white", "lightglass" -> R.drawable.q11_ask_white
+            else -> R.drawable.q11_ask_glass
+        }
+
     val bgRes: Int
         get() = when (mode) {
             "paper" -> R.drawable.q11_bg_paper
@@ -230,8 +258,16 @@ internal class WidgetTheme(o: JSONObject?) {
 internal object WidgetSize {
     val ROW = intArrayOf(R.layout.q11_widget_row, R.layout.q11_widget_row_l, R.layout.q11_widget_row_xl)
     val HEAD = intArrayOf(R.layout.q11_widget_head, R.layout.q11_widget_head_l, R.layout.q11_widget_head_xl)
-    val TITLE = floatArrayOf(17f, 18f, 19.5f)
-    val COUNT = floatArrayOf(13.5f, 14.5f, 15.5f)
+    /** 머리 글자(0.8.0 다듬기 · 시안 WidgetPolish: 크게 15.5 · 13 · 굵기 500) */
+    val TITLE = floatArrayOf(15f, 15.5f, 17f)
+    val COUNT = floatArrayOf(12.5f, 13f, 14f)
+    /** 0.8.0 줄 높이(dp · q11_widget_row · head와 같은 값) · 온전한 줄만 보이게 셀 때 */
+    val ROW_H = intArrayOf(42, 46, 50)
+    val HEAD_H = intArrayOf(26, 29, 32)
+    const val PROW_H = 42
+    /** 체크칸 자리 너비(dp) = `+N개 더`를 제목 줄에 맞출 때 */
+    val CHK_W = intArrayOf(34, 36, 38)
+    const val MORE_H = 16
     val EMPTY = floatArrayOf(14f, 15f, 16f)
     /** 줄 제목 · 오른쪽 날짜(q11_widget_row · _l · _xl과 같은 값) — 0.7.0 ◆ 프로젝트 줄 */
     val ROW_TITLE = floatArrayOf(15f, 17f, 19f)

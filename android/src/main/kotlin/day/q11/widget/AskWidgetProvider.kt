@@ -10,7 +10,8 @@ import android.widget.RemoteViews
 /**
  * 0.7.0 위젯 3 · 자료에 묻기(시안 WidgetMoreGalaxy 4×1).
  * - `내 자료에 물어보기…` = 11Q가 열리며 대화 탭 · 입력칸에 바로 커서 · 범위 = 전체 자료(앱 'ask' · AskKick)
- * - 마이크 = 11Q가 열리며 대화 탭 말로 묻기(앱 'askVoice')
+ * - 마이크 = 11Q가 열리며 대화 탭 음성으로 묻기(앱 'askVoice')
+ * - 0.8.0 다듬기: 위젯 바탕 없이 검색창(알약) 하나 · 로고는 알약 안 왼쪽
  * - 4×2 `최근 넣은 자료`(시안 WidgetMoreSizes)는 다음 판
  */
 class AskWidgetProvider : AppWidgetProvider() {
@@ -53,23 +54,20 @@ class AskWidgetProvider : AppWidgetProvider() {
             val en = feed?.optString("lang", "") == "en"
             val rv = RemoteViews(context.packageName, R.layout.q11_widget_ask)
 
-            rv.setInt(R.id.q11_card, "setBackgroundResource", th.bgRes)
+            // 0.8.0 검색창 하나(시안 WidgetPolish ⑦): 바탕 카드 없이 알약 = 위젯 바탕과 같은 그림 · 모서리 pillRadius
+            //   로고는 이 위젯에만(글자 없는 검색창이라 11Q 검색인 표시) · 알약 안 왼쪽
+            rv.setInt(R.id.q11_ak_pill, "setBackgroundResource", th.askBgRes)
             TodayWidgetProvider.tint(rv, R.id.q11_logo, th.accent, TodayWidgetProvider.chipShape(th))
             rv.setTextColor(R.id.q11_logo, th.accentInk)
-
-            // 묻기 줄 = 보조 버튼 토큰(ctlFillHex · ctlBorderHex × borderWidth) · 모서리 pillRadius(시안)
-            Q11Box.ctl(context, rv, R.id.q11_ak_bar_o, R.id.q11_ak_bar_i, th, th.pillRadius)
-            TodayWidgetProvider.tintImage(rv, R.id.q11_ak_search, th.ink)
             rv.setTextColor(R.id.q11_ak_text, th.meta)
             rv.setTextViewText(R.id.q11_ak_text, if (en) "Ask my files…" else "내 자료에 물어보기…")
-            rv.setInt(R.id.q11_ak_div, "setBackgroundColor", th.ctlLine)
-            TodayWidgetProvider.tintImage(rv, R.id.q11_ak_mic_icon, th.ink)
+            rv.setInt(R.id.q11_ak_div, "setBackgroundColor", WidgetTheme.alpha(th.ink, 0.14f))
+            TodayWidgetProvider.tintImage(rv, R.id.q11_ak_mic_icon, th.link)
             rv.setContentDescription(R.id.q11_ak_ask, if (en) "Ask my files" else "내 자료에 물어보기")
-            rv.setContentDescription(R.id.q11_ak_mic, if (en) "Ask by voice" else "말로 묻기")
+            rv.setContentDescription(R.id.q11_ak_mic, if (en) "Ask by voice" else "음성으로 묻기")
 
             TodayWidgetProvider.openApp(context, "ask")?.let { rv.setOnClickPendingIntent(R.id.q11_ak_ask, it) }
             TodayWidgetProvider.openApp(context, "askVoice")?.let { rv.setOnClickPendingIntent(R.id.q11_ak_mic, it) }
-            TodayWidgetProvider.openApp(context, null)?.let { rv.setOnClickPendingIntent(R.id.q11_logo, it) }
             return rv
         }
     }

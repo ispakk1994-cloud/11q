@@ -12,6 +12,7 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RemoteViews
 import org.json.JSONObject
 import kotlin.math.roundToInt
@@ -20,6 +21,7 @@ import kotlin.math.roundToInt
  * 0.7.0: 위젯이 넷(오늘 할 일 · 한 주 · 바로 적기 · 자료에 묻기)이 되어 같이 쓰는 것을 모음.
  * - 다시 그리기: 앱이 목록을 넘기거나 · 체크 · 15분 확인 · 글자 크기를 바꾸면 놓인 11Q 위젯 모두
  * - 줄 누르기: 오늘 할 일 · 한 주 목록이 같은 길(체크칸 = 끝냄/되돌림 · 줄 = 앱)
+ * - 0.8.0 온전한 줄만(fit · applyFit): 위젯 높이로 들어가는 줄을 세어 목록 칸 높이를 정하고 넘치면 `+N개 더`
  */
 internal object Q11Widgets {
 
@@ -96,6 +98,71 @@ internal object Q11Widgets {
             o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0)
         )
     }
+
+    /** 0.8.0 목록 칸 높이(dp) = 위젯 높이 − 머리 · 띠 · 여백(fixed) · 위젯 높이를 모르면 0. */
+    fun listAvail(context: Context, widgetId: Int, fixed: Int): Int {
+        val h = sizeDp(context, widgetId).second
+        return if (h <= 0) 0 else (h - fixed).coerceAtLeast(0)
+    }
+
+    /**
+     * 0.8.0 마지막 줄이 잘리지 않게(시안 WidgetPolish ②): 들어가는 만큼만 온전한 줄 · 넘치면 아래 `+N개 더`.
+     * items = 줄마다 (높이 dp, 세는 줄인지 = 묶음 머리가 아님).
+     * 돌려주는 값 = (목록 칸 높이 dp, 더 있는 줄 수) · 다 들어가거나 높이를 모르면 (-1, 0) = 레이아웃 그대로.
+     */
+    fun fit(items: List<Pair<Int, Boolean>>, avail: Int, moreH: Int): Pair<Int, Int> {
+        if (avail <= 0 || items.isEmpty()) return Pair(-1, 0)
+        var sum = 0
+        for (it in items) sum += it.first
+        if (sum <= avail) return Pair(-1, 0)
+        var k = 0
+        var used = 0
+        val room = avail - moreH
+        while (k < items.size && used + items[k].first <= room) {
+            used += items[k].first
+            k++
+        }
+        // 묶음 머리만 남고 그 아래 줄이 안 보이면 머리도 뺌
+        while (k > 0 && !items[k - 1].second) {
+            k--
+            used -= items[k].first
+        }
+        // 한 줄도 온전히 안 들어가는 아주 낮은 위젯은 레이아웃 그대로(`+N개 더`만 남지 않게)
+        if (k == 0) return Pair(-1, 0)
+        var more = 0
+        for (i in k until items.size) if (items[i].second) more++
+        return Pair(used, more)
+    }
+
+    /**
+     * fit 결과를 그림에(안드로이드 12 이상). 런처는 같은 레이아웃이면 앞 그림에 다시 덮어 그리므로(reapply)
+     * 목록 칸 높이를 늘 정한다: 넘치면 온전한 줄까지 · 그 밖은 칸 전체(MATCH_PARENT로 되돌림).
+     * 그 아래 판은 레이아웃 그대로(목록이 칸을 다 채움 · `+N개 더` 없음).
+     */
+    fun applyFit(
+        context: Context,
+        rv: RemoteViews,
+        box: Int,
+        moreView: Int,
+        fit: Pair<Int, Int>,
+        en: Boolean,
+        level: Int
+    ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            rv.setViewVisibility(moreView, View.GONE)
+            return
+        }
+        if (fit.first < 0) {
+            rv.setViewLayoutHeight(box, ViewGroup.LayoutParams.MATCH_PARENT.toFloat(), TypedValue.COMPLEX_UNIT_PX)
+            rv.setViewVisibility(moreView, View.GONE)
+            return
+        }
+        rv.setViewLayoutHeight(box, fit.first.toFloat(), TypedValue.COMPLEX_UNIT_DIP)
+        val more = fit.second
+        rv.setViewVisibility(moreView, if (more > 0) View.VISIBLE else View.GONE)
+        rv.setTextViewText(moreView, if (en) "+$more more" else "+${more}개 더")
+        rv.setViewPadding(moreView, dp(context, WidgetSize.CHK_W[level].toFloat()), 0, 0, 0)
+    }
 }
 
 /**
@@ -151,7 +218,7 @@ internal object Q11Box {
         rv.setViewPadding(outer, pad, pad, pad, pad)
     }
 
-    /** 보조 버튼(말로 · 사진 · 묻기 줄) = ctlFillHex · ctlBorderHex × borderWidth · ctlRadius */
+    /** 보조 버튼(음성 · 사진 · 묻기 줄) = ctlFillHex · ctlBorderHex × borderWidth · ctlRadius */
     fun ctl(context: Context, rv: RemoteViews, outer: Int, inner: Int, th: WidgetTheme, radius: Float = th.ctlRadius) =
         paint(context, rv, outer, inner, th.ctl, th.ctlLine, th.borderW, radius)
 
@@ -162,6 +229,16 @@ internal object Q11Box {
     /** 비움(고르지 않은 날 칸). */
     fun clear(context: Context, rv: RemoteViews, outer: Int, inner: Int) =
         paint(context, rv, outer, inner, 0, 0, 0f, 0f)
+
+    /** 0.8.0 테두리 없이 바탕 하나(종이 적기 버튼 그림자). */
+    fun solid(rv: RemoteViews, view: Int, color: Int, radius: Float) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            rv.setInt(view, "setBackgroundResource", FILL[bucket(radius)])
+            rv.setColorStateList(view, "setBackgroundTintList", ColorStateList.valueOf(color))
+        } else {
+            rv.setInt(view, "setBackgroundColor", color)
+        }
+    }
 }
 
 /** 목록 줄 모양(오늘 할 일 · 한 주 같은 줄). */

@@ -28,10 +28,9 @@
     <string name="q11_week_pv_2">법인카드 정산</string>
     <string name="q11_week_pv_2m">어제</string>
     <string name="q11_quick_label">바로 적기</string>
-    <string name="q11_quick_desc">앱을 안 열고 적기 · 말로 · 사진</string>
-    <string name="q11_quick_voice">말로</string>
+    <string name="q11_quick_desc">적기 · 음성은 앱을 안 열고 바로 · 사진은 11Q 카메라</string>
+    <string name="q11_quick_voice">음성</string>
     <string name="q11_quick_photo">사진</string>
-    <string name="q11_quick_foot">적기 · 말로는 앱이 안 열려요</string>
     <string name="q11_ask_label">자료에 묻기</string>
     <string name="q11_ask_desc">내 자료에 바로 물어보기 · 11Q 대화로</string>
     <string name="q11_ask_hint">내 자료에 물어보기…</string>
