@@ -159,6 +159,9 @@ internal class WidgetTheme(o: JSONObject?) {
 
     val square: Boolean get() = chkRadius <= 1f
 
+    /** 0.3.2 주 버튼(＋ 적기) 선 굵기 = borderWidth · 1.5까지(종이 2 → 1.5 · 시안 WidgetPolish) */
+    val primaryBw: Float get() = borderW.coerceAtMost(1.5f)
+
     val bgRes: Int
         get() = when (mode) {
             "paper" -> R.drawable.q11_bg_paper
@@ -202,7 +205,14 @@ internal class WidgetTheme(o: JSONObject?) {
 internal object WidgetSize {
     val ROW = intArrayOf(R.layout.q11_widget_row, R.layout.q11_widget_row_l, R.layout.q11_widget_row_xl)
     val HEAD = intArrayOf(R.layout.q11_widget_head, R.layout.q11_widget_head_l, R.layout.q11_widget_head_xl)
-    val TITLE = floatArrayOf(17f, 18f, 19.5f)
-    val COUNT = floatArrayOf(13.5f, 14.5f, 15.5f)
+    /** 머리 글자(0.3.2 다듬기 · 시안 WidgetPolish: 크게 15.5 · 13 · 굵기 500) */
+    val TITLE = floatArrayOf(15f, 15.5f, 17f)
+    val COUNT = floatArrayOf(12.5f, 13f, 14f)
+    /** 0.3.2 줄 높이(dp · q11_widget_row · head와 같은 값) · 온전한 줄만 보이게 셀 때 */
+    val ROW_H = intArrayOf(42, 46, 50)
+    val HEAD_H = intArrayOf(26, 29, 32)
+    /** 체크칸 자리 너비(dp) = `+N개 더`를 제목 줄에 맞출 때 */
+    val CHK_W = intArrayOf(34, 36, 38)
+    const val MORE_H = 16
     val EMPTY = floatArrayOf(14f, 15f, 16f)
 }
