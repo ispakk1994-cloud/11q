@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 위젯 3 · 자료에 묻기 4×1 · 0.8.0 다듬기(시안 WidgetPolish): 바탕 카드 없이 알약 하나(높이 56 · 위젯 바탕과 같은 그림 · 모서리 pillRadius) · 로고는 알약 안 왼쪽 -->
+<!-- 0.8.1 위젯 바탕 = 위젯 전체(투명 · @android:id/background): 안드로이드 12 이상 런처는 위젯 바탕을 찾아 둥글게 자르는데
+     바탕이 투명하면 알약을 바탕으로 보고 잘라 네온(모서리 6) · 스위스(네모) 알약 모서리 선이 끊겼음(One UI · 11/21 상준님 사진) -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/q11_root"
+    android:id="@android:id/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:id="@+id/q11_ak_pill"

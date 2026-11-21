@@ -16,6 +16,8 @@ import WidgetKit
 /// - 비밀 값(키 · 토큰 · 서버 주소)은 넣지 않는다.
 public class OneoneQWidgetPlugin: NSObject, FlutterPlugin {
     static let kind = "Q11Today"
+    /// 0.8.1 홈 화면 11Q 위젯 넷(오늘 할 일 · 한 주 · 바로 적기 · 자료에 묻기 · 설정 `홈 화면 위젯` 줄이 셈 · 갤럭시 count와 같게)
+    static let homeKinds: Set<String> = ["Q11Today", "Q11Week", "Q11Quick", "Q11Ask"]
     static let refreshTask = "day.q11.widget.refresh"
 
     private var channel: FlutterMethodChannel?
@@ -87,14 +89,14 @@ public class OneoneQWidgetPlugin: NSObject, FlutterPlugin {
         #endif
     }
 
-    /// 홈 화면 · 잠금 화면에 놓인 11Q 위젯 수(오늘 할 일 · ＋)
+    /// 홈 화면에 놓인 11Q 위젯 수(0.8.1 넷 모두 · 잠금 화면 위젯은 세지 않음)
     static func widgetCount(_ done: @escaping (Int) -> Void) {
         #if canImport(WidgetKit)
         if #available(iOS 14.0, *) {
             WidgetCenter.shared.getCurrentConfigurations { res in
                 var n = 0
                 if case .success(let list) = res {
-                    n = list.filter { $0.kind == kind }.count
+                    n = list.filter { homeKinds.contains($0.kind) }.count
                 }
                 DispatchQueue.main.async { done(n) }
             }
